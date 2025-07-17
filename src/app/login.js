@@ -39,7 +39,7 @@ export default function Login() {
               onChange={(e) => setCorreo(e.target.value)}
               placeholder="Ingrese su correo"
               required
-              className="w-full px-4 py-2 border text-white text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border text-white text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
 
@@ -53,7 +53,7 @@ export default function Login() {
               onChange={(e) => setContrasena(e.target.value)}
               placeholder="Ingrese su contraseña"
               required
-              className="w-full px-4 py-2 border text-white text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border text-white text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
 
@@ -63,7 +63,7 @@ export default function Login() {
               id="recordar"
               checked={recordar}
               onChange={(e) => setRecordar(e.target.checked)}
-              className="accent-blue-600"
+              className="accent-orange-600"
             />
             <label
               htmlFor="recordar"
@@ -75,7 +75,7 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full bg-orange-600 text-white font-semibold py-2 mt-4 rounded-lg hover:bg-blue-700 transition duration-200"
+            className="w-full bg-orange-600 text-white font-semibold py-2 mt-4 rounded-lg hover:bg-orange-700 transition duration-200"
           >
             Iniciar Sesión
           </button>
