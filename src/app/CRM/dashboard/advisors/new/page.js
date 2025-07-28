@@ -1,11 +1,12 @@
 'use client';
 
+import { useState } from 'react';
+
 import BtnClean from '@/components/dashboard/buttons/clear';
 import BtnSave from '@/components/dashboard/buttons/save';
 import DepartaCiudad from '@/components/dashboard/select/depart_ciud';
-import { useState } from 'react';
 
-export default function newAdvisor() {
+export default function NewAdvisor() {
   const [formData, setFormData] = useState({
     nombre: '',
     correo: '',

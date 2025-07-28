@@ -5,7 +5,7 @@ import BtnSave from '@/components/dashboard/buttons/save';
 import DepartaCiudad from '@/components/dashboard/select/depart_ciud';
 import { useState } from 'react';
 
-export default function newCostumer() {
+export default function NewCostumer() {
   const [formData, setFormData] = useState({
     nombre: '',
     correo: '',
@@ -116,7 +116,7 @@ export default function newCostumer() {
 
         <div className="flex flex-wrap gap-4 mt-6">
           <BtnSave />
-          <BtnClean handleReset={handleReset} />
+          <BtnClean handleReset={() => handleReset()} />
         </div>
       </form>
     </div>
