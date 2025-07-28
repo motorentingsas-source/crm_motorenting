@@ -76,7 +76,7 @@ export default function EditProfile() {
             )}
           </div>
 
-          <label className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition">
+          <label className="cursor-pointer bg-orange-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-orange-700 transition">
             Cambiar avatar
             <input
               type="file"
@@ -97,7 +97,7 @@ export default function EditProfile() {
               name="nombre"
               value={perfil.nombre}
               onChange={handleInputChange}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
 
@@ -110,7 +110,7 @@ export default function EditProfile() {
               name="correo"
               value={perfil.correo}
               onChange={handleInputChange}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
 
@@ -123,7 +123,7 @@ export default function EditProfile() {
               name="telefono"
               value={perfil.telefono}
               onChange={handleInputChange}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
         </div>
@@ -132,7 +132,7 @@ export default function EditProfile() {
           <button
             type="button"
             onClick={() => setMostrarCambioClave(!mostrarCambioClave)}
-            className="text-blue-600 hover:underline text-sm font-medium"
+            className="text-orange-600 hover:underline text-sm font-medium"
           >
             {mostrarCambioClave
               ? 'Ocultar cambio de contraseña'
@@ -149,7 +149,7 @@ export default function EditProfile() {
                   type={verPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
                 <button
                   type="button"
@@ -172,7 +172,7 @@ export default function EditProfile() {
                   type={verConfirmar ? 'text' : 'password'}
                   value={confirmarPassword}
                   onChange={(e) => setConfirmarPassword(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
                 <button
                   type="button"

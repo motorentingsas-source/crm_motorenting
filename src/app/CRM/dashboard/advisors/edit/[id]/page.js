@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
+import BtnReturn from '@/components/dashboard/buttons/return';
+import BtnSave from '@/components/dashboard/buttons/save';
 
 const advisors = [
   {
@@ -27,6 +29,24 @@ const advisors = [
     id: 3,
     nombre: 'Ana Torres',
     correo: 'ana.torres@empresa.com',
+    telefono: '3006543210',
+    direccion: 'Calle 123',
+    ciudad: 'Bogotá',
+    documento: '123456789',
+  },
+  {
+    id: 4,
+    nombre: 'Vanesa Manrique',
+    correo: 'vane.manrrique@empresa.com',
+    telefono: '3006543210',
+    direccion: 'Calle 123',
+    ciudad: 'Bogotá',
+    documento: '123456789',
+  },
+  {
+    id: 5,
+    nombre: 'Gustavo Diaz',
+    correo: 'gus.diaz@empresa.com',
     telefono: '3006543210',
     direccion: 'Calle 123',
     ciudad: 'Bogotá',
@@ -98,28 +118,15 @@ export default function EditAdvisor() {
               name={name}
               value={advisor[name] || ''}
               onChange={handleChange}
-              className="mt-1 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               required={name === 'nombre' || name === 'correo'}
             />
           </div>
         ))}
 
         <div className="flex justify-end mt-4">
-          <Link
-            href="/CRM/dashboard/advisors"
-            className={`px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition mr-3`}
-          >
-            <span>Volver</span>
-          </Link>
-          <button
-            type="submit"
-            disabled={loading}
-            className={`px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            {loading ? 'Guardando...' : 'Guardar Cambios'}
-          </button>
+          <BtnReturn route={'/CRM/dashboard/advisors'} />
+          <BtnSave />
         </div>
       </form>
     </div>

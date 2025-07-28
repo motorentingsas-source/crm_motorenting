@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import Link from 'next/link';
+import BtnReturn from '@/components/dashboard/buttons/return';
+import BtnSave from '@/components/dashboard/buttons/save';
 
 const customers = [
   {
@@ -18,6 +19,33 @@ const customers = [
     id: 2,
     nombre: 'María López',
     correo: 'marialopez@correo.com',
+    telefono: '3129876543',
+    direccion: 'Carrera 456',
+    ciudad: 'Medellín',
+    documento: '987654321',
+  },
+  {
+    id: 3,
+    nombre: 'Enrique Montalve',
+    correo: 'enrique@correo.com',
+    telefono: '3129876543',
+    direccion: 'Carrera 456',
+    ciudad: 'Medellín',
+    documento: '987654321',
+  },
+  {
+    id: 4,
+    nombre: 'Jorge lopez',
+    correo: 'jorgelopez@correo.com',
+    telefono: '3129876543',
+    direccion: 'Carrera 456',
+    ciudad: 'Medellín',
+    documento: '987654321',
+  },
+  {
+    id: 5,
+    nombre: 'Sofia Montalve',
+    correo: 'sofiamontalve@correo.com',
     telefono: '3129876543',
     direccion: 'Carrera 456',
     ciudad: 'Medellín',
@@ -90,28 +118,15 @@ export default function EditCustomer() {
               name={name}
               value={customer[name] || ''}
               onChange={handleChange}
-              className="mt-1 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               required={name === 'nombre' || name === 'correo'}
             />
           </div>
         ))}
 
         <div className="flex justify-end mt-4">
-          <Link
-            href="/CRM/dashboard/customers"
-            className={`px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition mr-3`}
-          >
-            <span>Volver</span>
-          </Link>
-          <button
-            type="submit"
-            disabled={loading}
-            className={`px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            {loading ? 'Guardando...' : 'Guardar Cambios'}
-          </button>
+          <BtnReturn route="/CRM/dashboard/customers" />
+          <BtnSave />
         </div>
       </form>
     </div>

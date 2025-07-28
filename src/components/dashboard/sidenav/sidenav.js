@@ -39,7 +39,7 @@ export default function SideNavigation() {
         </div>
         <Link
           href="/CRM/dashboard/profile/edit"
-          className="text-sm text-blue-400 hover:underline"
+          className="text-sm text-oragen-400 hover:underline"
         >
           Editar perfil
         </Link>
