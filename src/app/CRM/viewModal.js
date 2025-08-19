@@ -59,7 +59,7 @@ export default function ViewModal({ data, type, onClose }) {
             </div>
           </div>
           {type === 'customer' && (
-            <div>
+            <div className="h-full">
               <CommentsHistory customer={data} />
             </div>
           )}

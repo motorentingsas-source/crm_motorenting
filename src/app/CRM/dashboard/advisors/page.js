@@ -7,9 +7,11 @@ import Table from '@/components/dashboard/tables/table';
 import Link from 'next/link';
 import RoleGuard from '@/components/auth/roleGuard';
 import { advisors } from '@/api/advisors';
+import { useAuth } from '@/context/authContext';
 
 export default function Advisors() {
   const [selectedAdvisors, setSelectedAdvisors] = useState(null);
+  const { usuario } = useAuth();
 
   return (
     <RoleGuard allowedRoles={['Administrador']}>
@@ -33,6 +35,7 @@ export default function Advisors() {
             info={advisors}
             view="advisors"
             setSelected={setSelectedAdvisors}
+            rol={usuario?.rol}
           />
           {selectedAdvisors && (
             <ViewModal

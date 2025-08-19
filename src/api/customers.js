@@ -10,33 +10,8 @@ export const customers = [
     city: 'Bogotá',
     document: '123456789',
     advisor: 'Maria Manrrique',
-    state: 'INTENTANDO CONTACTAR',
-    comments: [
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-    ],
+    state: 'Sin Contactar',
+    comments: [],
   },
   {
     id: 2,
@@ -47,13 +22,8 @@ export const customers = [
     city: 'Medellín',
     document: '987654321',
     advisor: 'Jorge Espinosa',
-    state: 'INTENTANDO CONTACTAR',
-    comments: [
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-    ],
+    state: 'Sin Contactar',
+    comments: [],
   },
   {
     id: 3,
@@ -65,12 +35,7 @@ export const customers = [
     document: '987654321',
     advisor: 'Sin Asignar',
     state: 'Sin Contactar',
-    comments: [
-      {
-        date: '',
-        description: '',
-      },
-    ],
+    comments: [],
   },
   {
     id: 4,
@@ -82,12 +47,7 @@ export const customers = [
     document: '987654321',
     advisor: 'Sin Asignar',
     state: 'Sin Contactar',
-    comments: [
-      {
-        date: '',
-        description: '',
-      },
-    ],
+    comments: [],
   },
   {
     id: 5,
@@ -99,12 +59,7 @@ export const customers = [
     document: '987654321',
     advisor: 'Sin Asignar',
     state: 'Sin Contactar',
-    comments: [
-      {
-        date: '',
-        description: '',
-      },
-    ],
+    comments: [],
   },
   {
     id: 6,
@@ -115,13 +70,8 @@ export const customers = [
     city: 'Medellín',
     document: '987654321',
     advisor: 'Maria Manrrique',
-    state: 'INTENTANDO CONTACTAR',
-    comments: [
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-    ],
+    state: 'Sin Contactar',
+    comments: [],
   },
   {
     id: 7,
@@ -133,12 +83,7 @@ export const customers = [
     document: '987654321',
     advisor: 'Sin Asignar',
     state: 'Sin Contactar',
-    comments: [
-      {
-        date: '',
-        description: '',
-      },
-    ],
+    comments: [],
   },
   {
     id: 8,
@@ -150,12 +95,7 @@ export const customers = [
     document: '987654321',
     advisor: 'Sin Asignar',
     state: 'Sin Contactar',
-    comments: [
-      {
-        date: '',
-        description: '',
-      },
-    ],
+    comments: [],
   },
   {
     id: 9,
@@ -166,13 +106,8 @@ export const customers = [
     city: 'Medellín',
     document: '987654321',
     advisor: 'Jorge Espinosa',
-    state: 'INTENTANDO CONTACTAR',
-    comments: [
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-    ],
+    state: 'Sin Contactar',
+    comments: [],
   },
   {
     id: 10,
@@ -183,13 +118,8 @@ export const customers = [
     city: 'Bogotá',
     document: '123456789',
     advisor: 'Maria Manrrique',
-    state: 'INTENTANDO CONTACTAR',
-    comments: [
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-    ],
+    state: 'Sin Contactar',
+    comments: [],
   },
   {
     id: 11,
@@ -200,13 +130,8 @@ export const customers = [
     city: 'Medellín',
     document: '987654321',
     advisor: 'Jorge Espinosa',
-    state: 'INTENTANDO CONTACTAR',
-    comments: [
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-    ],
+    state: 'Sin Contactar',
+    comments: [],
   },
   {
     id: 12,
@@ -218,12 +143,7 @@ export const customers = [
     document: '987654321',
     advisor: 'Sin Asignar',
     state: 'Sin Contactar',
-    comments: [
-      {
-        date: '',
-        description: '',
-      },
-    ],
+    comments: [],
   },
   {
     id: 13,
@@ -235,12 +155,7 @@ export const customers = [
     document: '987654321',
     advisor: 'Sin Asignar',
     state: 'Sin Contactar',
-    comments: [
-      {
-        date: '',
-        description: '',
-      },
-    ],
+    comments: [],
   },
   {
     id: 14,
@@ -252,12 +167,7 @@ export const customers = [
     document: '987654321',
     advisor: 'Sin Asignar',
     state: 'Sin Contactar',
-    comments: [
-      {
-        date: '',
-        description: '',
-      },
-    ],
+    comments: [],
   },
   {
     id: 15,
@@ -268,13 +178,8 @@ export const customers = [
     city: 'Medellín',
     document: '987654321',
     advisor: 'Maria Manrrique',
-    state: 'INTENTANDO CONTACTAR',
-    comments: [
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-    ],
+    state: 'Sin Contactar',
+    comments: [],
   },
   {
     id: 16,
@@ -286,12 +191,7 @@ export const customers = [
     document: '987654321',
     advisor: 'Sin Asignar',
     state: 'Sin Contactar',
-    comments: [
-      {
-        date: '',
-        description: '',
-      },
-    ],
+    comments: [],
   },
   {
     id: 17,
@@ -303,12 +203,7 @@ export const customers = [
     document: '987654321',
     advisor: 'Sin Asignar',
     state: 'Sin Contactar',
-    comments: [
-      {
-        date: '',
-        description: '',
-      },
-    ],
+    comments: [],
   },
   {
     id: 18,
@@ -319,13 +214,8 @@ export const customers = [
     city: 'Medellín',
     document: '987654321',
     advisor: 'Jorge Espinosa',
-    state: 'INTENTANDO CONTACTAR',
-    comments: [
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-    ],
+    state: 'Sin Contactar',
+    comments: [],
   },
   {
     id: 19,
@@ -336,13 +226,8 @@ export const customers = [
     city: 'Bogotá',
     document: '123456789',
     advisor: 'Maria Manrrique',
-    state: 'INTENTANDO CONTACTAR',
-    comments: [
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-    ],
+    state: 'Sin Contactar',
+    comments: [],
   },
   {
     id: 20,
@@ -353,13 +238,8 @@ export const customers = [
     city: 'Medellín',
     document: '987654321',
     advisor: 'Jorge Espinosa',
-    state: 'INTENTANDO CONTACTAR',
-    comments: [
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-    ],
+    state: 'Sin Contactar',
+    comments: [],
   },
   {
     id: 21,
@@ -371,12 +251,7 @@ export const customers = [
     document: '987654321',
     advisor: 'Sin Asignar',
     state: 'Sin Contactar',
-    comments: [
-      {
-        date: '',
-        description: '',
-      },
-    ],
+    comments: [],
   },
   {
     id: 22,
@@ -388,12 +263,7 @@ export const customers = [
     document: '987654321',
     advisor: 'Sin Asignar',
     state: 'Sin Contactar',
-    comments: [
-      {
-        date: '',
-        description: '',
-      },
-    ],
+    comments: [],
   },
   {
     id: 23,
@@ -405,12 +275,7 @@ export const customers = [
     document: '987654321',
     advisor: 'Sin Asignar',
     state: 'Sin Contactar',
-    comments: [
-      {
-        date: '',
-        description: '',
-      },
-    ],
+    comments: [],
   },
   {
     id: 24,
@@ -421,13 +286,8 @@ export const customers = [
     city: 'Medellín',
     document: '987654321',
     advisor: 'Maria Manrrique',
-    state: 'INTENTANDO CONTACTAR',
-    comments: [
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-    ],
+    state: 'Sin Contactar',
+    comments: [],
   },
   {
     id: 25,
@@ -439,12 +299,7 @@ export const customers = [
     document: '987654321',
     advisor: 'Sin Asignar',
     state: 'Sin Contactar',
-    comments: [
-      {
-        date: '',
-        description: '',
-      },
-    ],
+    comments: [],
   },
   {
     id: 26,
@@ -456,12 +311,7 @@ export const customers = [
     document: '987654321',
     advisor: 'Sin Asignar',
     state: 'Sin Contactar',
-    comments: [
-      {
-        date: '',
-        description: '',
-      },
-    ],
+    comments: [],
   },
   {
     id: 27,
@@ -472,12 +322,7 @@ export const customers = [
     city: 'Medellín',
     document: '987654321',
     advisor: 'Jorge Espinosa',
-    state: 'INTENTANDO CONTACTAR',
-    comments: [
-      {
-        date: '2025-08-10 - 9:00 am',
-        description: 'Cliente contactado por primera vez',
-      },
-    ],
+    state: 'Sin Contactar',
+    comments: [],
   },
 ];

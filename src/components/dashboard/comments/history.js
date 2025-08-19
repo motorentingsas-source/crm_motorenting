@@ -5,7 +5,7 @@ export default function CommentsHistory({ customer }) {
       <label className="block text-sm font-medium text-gray-700">
         Historial de comentarios
       </label>
-      <div className="mt-2 border rounded-md p-3 max-h-60 overflow-y-auto bg-gray-50">
+      <div className="mt-2 border rounded-md p-3 max-h-100 overflow-y-auto bg-gray-50">
         {customer?.comments?.length > 0 ? (
           customer?.comments.map((c, index) => (
             <div key={index} className="flex items-start gap-3 mb-4">
