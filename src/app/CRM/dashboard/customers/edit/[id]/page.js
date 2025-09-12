@@ -7,7 +7,6 @@ import BtnSave from '@/components/dashboard/buttons/save';
 import { stateCustomer } from '@/lib/api/stateCustomer';
 import CommentsHistory from '@/components/dashboard/comments/history';
 import AlertModal from '@/components/dashboard/modals/alertModal';
-import { stateDelivery } from '@/lib/api/stateDelivery';
 import { useAuth } from '@/context/authContext';
 
 export default function EditCustomer() {
@@ -153,11 +152,11 @@ export default function EditCustomer() {
                 required
               >
                 <option value="">Seleccione estado de entrega</option>
-                {stateDelivery.map((state) => (
+                {/* {stateDelivery.map((state) => (
                   <option key={state} value={state}>
                     {state}
                   </option>
-                ))}
+                ))} */}
               </select>
             </div>
           )}
