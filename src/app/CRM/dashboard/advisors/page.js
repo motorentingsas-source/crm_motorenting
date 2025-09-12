@@ -6,10 +6,10 @@ import ViewModal from '../../viewModal';
 import Table from '@/components/dashboard/tables/table';
 import Link from 'next/link';
 import RoleGuard from '@/components/auth/roleGuard';
-import { advisors } from '@/api/advisors';
+import { advisors } from '@/lib/api/advisors';
 import { useAuth } from '@/context/authContext';
 import MessageEditorModal from '@/components/dashboard/modals/messageEditorModal';
-import { dataMotivation } from '@/api/messageMotivation';
+import { dataMotivation } from '@/lib/api/messageMotivation';
 
 export default function Advisors() {
   const [selectedAdvisors, setSelectedAdvisors] = useState(null);
@@ -18,7 +18,7 @@ export default function Advisors() {
   const { usuario } = useAuth();
 
   return (
-    <RoleGuard allowedRoles={['Administrador']}>
+    <RoleGuard allowedRoles={['ADMIN']}>
       <div className="w-full p-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
           <h1 className="text-xl md:text-2xl font-semibold text-gray-800">
@@ -48,7 +48,7 @@ export default function Advisors() {
             info={advisors}
             view="advisors"
             setSelected={setSelectedAdvisors}
-            rol={usuario?.rol}
+            rol={usuario?.role}
           />
           {selectedAdvisors && (
             <ViewModal

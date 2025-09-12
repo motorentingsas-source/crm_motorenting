@@ -46,7 +46,7 @@ export default function SideNavigation() {
           Editar perfil
         </Link>
         <h6 className="text-sm text-orange-400 font-semibold text-center">
-          {usuario?.rol} - {usuario?.name}
+          {usuario?.role} - {usuario?.name}
         </h6>
         <div className="w-full border-t border-gray-700 my-4"></div>
         <NavLinks />

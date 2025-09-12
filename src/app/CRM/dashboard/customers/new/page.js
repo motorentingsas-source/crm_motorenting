@@ -1,25 +1,28 @@
 'use client';
 
+import { useState } from 'react';
 import AlertModal from '@/components/dashboard/modals/alertModal';
 import BtnClean from '@/components/dashboard/buttons/clear';
 import BtnReturn from '@/components/dashboard/buttons/return';
 import BtnSave from '@/components/dashboard/buttons/save';
 import DepartaCiudad from '@/components/dashboard/select/depart_ciud';
-import { useState } from 'react';
-import { stateCustomer } from '@/api/stateCustomer';
-import { advisors } from '@/api/advisors';
 import { useAuth } from '@/context/authContext';
+import { createCustomer } from '@/lib/api/customer';
+import { stateCustomer } from '@/lib/api/stateCustomer';
+import { advisors } from '@/lib/api/advisors';
 
-export default function NewCostumer() {
+export default function NewCustomer() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    direction: '',
-    departament: '',
+    address: '',
+    document: '',
+    department: '',
     city: '',
-    state: '',
+    stateId: 0,
     birthdate: '',
+    advisorId: 0,
   });
   const [alert, setAlert] = useState({ type: '', message: '', url: '' });
   const { usuario } = useAuth();
@@ -29,32 +32,49 @@ export default function NewCostumer() {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === 'departament' ? { city: '' } : {}),
+      ...(name === 'department' ? { city: '' } : {}),
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Datos del cliente:', formData);
-
-    setAlert({
-      type: 'success',
-      message: 'Cliente creado correctamente.',
-      url: '/CRM/dashboard/customers',
-    });
-  };
-
-  const handleReset = () => {
+  const handleReset = () =>
     setFormData({
       name: '',
       email: '',
       phone: '',
-      direction: '',
-      departament: '',
+      address: '',
+      document: '',
+      department: '',
       city: '',
-      state: '',
+      stateId: 0,
       birthdate: '',
+      advisorId: 0,
     });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      debugger;
+      await createCustomer(formData);
+      setAlert({
+        type: 'success',
+        message: 'Cliente creado correctamente.',
+        url: '/CRM/dashboard/customers',
+      });
+    } catch (err) {
+      setAlert({
+        type: 'error',
+        message: err.message || 'Error al crear cliente',
+      });
+    }
+  };
+
+  const fieldLabels = {
+    name: 'Nombres y Apellidos',
+    email: 'Correo',
+    birthdate: 'Fecha de Nacimiento',
+    phone: 'Teléfono',
+    address: 'Dirección',
+    document: 'Número de Documento',
   };
 
   return (
@@ -69,122 +89,39 @@ export default function NewCostumer() {
 
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="flex flex-col">
-            <label
-              htmlFor="name"
-              className="text-sm font-medium text-gray-700 mb-1"
-            >
-              Nombre
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
-              required
-            />
-          </div>
+          {Object.keys(fieldLabels).map((key) => (
+            <div key={key} className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                {fieldLabels[key]}
+              </label>
+              <input
+                type={key === 'birthdate' ? 'date' : 'text'}
+                name={key}
+                value={formData[key]}
+                onChange={handleChange}
+                className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
+                  focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+                required
+              />
+            </div>
+          ))}
 
-          <div className="flex flex-col">
-            <label
-              htmlFor="email"
-              className="text-sm font-medium text-gray-700 mb-1"
-            >
-              Correo
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
-              required
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label
-              htmlFor="birthdate"
-              className="text-sm font-medium text-gray-700 mb-1"
-            >
-              Fecha de Nacimiento
-            </label>
-            <input
-              type="date"
-              id="birthdate"
-              name="birthdate"
-              value={formData.birthdate}
-              onChange={handleChange}
-              className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
-              required
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label
-              htmlFor="phone"
-              className="text-sm font-medium text-gray-700 mb-1"
-            >
-              Teléfono
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
-              required
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label
-              htmlFor="direction"
-              className="text-sm font-medium text-gray-700 mb-1"
-            >
-              Dirección
-            </label>
-            <input
-              type="text"
-              id="direction"
-              name="direction"
-              value={formData.direction}
-              onChange={handleChange}
-              className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
-              required
-            />
-          </div>
-
-          {usuario.rol === 'Administrador' && (
+          {usuario.role === 'ADMIN' && (
             <div className="flex flex-col">
-              <label
-                htmlFor="advisor"
-                className="text-sm font-medium text-gray-700 mb-1"
-              >
+              <label className="text-sm font-medium text-gray-700 mb-1">
                 Asignar Asesor
               </label>
               <select
-                id="advisor"
-                name="advisor"
-                value={formData.advisor}
+                name="advisorId"
+                value={formData.advisorId}
                 onChange={handleChange}
                 className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
-                required
+                  focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
               >
-                <option value="">Seleccione un estado</option>
-                {advisors.map((e, i) => (
-                  <option key={i} value={e.id}>
-                    {e.name}
+                <option value="">Seleccione un asesor</option>
+                {advisors.map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.name}
                   </option>
                 ))}
               </select>
@@ -192,24 +129,20 @@ export default function NewCostumer() {
           )}
 
           <div className="flex flex-col">
-            <label
-              htmlFor="state"
-              className="text-sm font-medium text-gray-700 mb-1"
-            >
+            <label className="text-sm font-medium text-gray-700 mb-1">
               Estado
             </label>
             <select
-              id="state"
-              name="state"
-              value={formData.state}
+              name="stateId"
+              value={formData.stateId}
               onChange={handleChange}
               className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+                focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
               required
             >
               <option value="">Seleccione un estado</option>
               {stateCustomer.map((state) => (
-                <option key={state} value={state}>
+                <option key={state} value={1}>
                   {state}
                 </option>
               ))}

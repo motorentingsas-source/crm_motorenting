@@ -21,7 +21,7 @@ export default function Layout({ children }) {
   }, [usuario]);
 
   return (
-    <RoleGuard allowedRoles={['Administrador', 'Advisor']}>
+    <RoleGuard allowedRoles={['ADMIN', 'ASESOR']}>
       <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
         <div className="w-full flex-none md:w-64">
           <SideNavigation />

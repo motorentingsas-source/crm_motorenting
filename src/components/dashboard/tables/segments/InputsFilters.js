@@ -11,7 +11,7 @@ export default function InputFilters({
     {
       name: 'advisor',
       title: 'Asesor',
-      show: rol === 'Administrador' && view === 'customers',
+      show: rol === 'ADMIN' && view === 'customers',
     },
     { name: 'name', title: 'Nombre', show: true },
     { name: 'email', title: 'Correo', show: true },
@@ -21,9 +21,7 @@ export default function InputFilters({
 
   return (
     <tr>
-      {rol === 'Administrador' && view === 'customers' && !delivered && (
-        <th></th>
-      )}
+      {rol === 'ADMIN' && view === 'customers' && !delivered && <th></th>}
 
       {allFilters
         .filter((f) => f.show)

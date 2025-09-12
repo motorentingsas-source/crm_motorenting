@@ -31,26 +31,27 @@ const Table = ({ info = [], view, setSelected, rol, delivered = false }) => {
   });
 
   useEffect(() => {
-    let result = info.filter(
+    const arrayInfo = Array.isArray(info) ? info : [];
+    let result = arrayInfo.filter(
       (a) =>
         a.name?.toLowerCase().includes(filters.name.toLowerCase()) &&
         a.email?.toLowerCase().includes(filters.email.toLowerCase()) &&
         a.phone?.toLowerCase().includes(filters.phone.toLowerCase()) &&
-        (a.advisor?.toLowerCase() || '').includes(
+        (a.advisor?.name?.toLowerCase() || 'sin asignar').includes(
           filters.advisor.toLowerCase()
         ) &&
-        (a.state?.toLowerCase() || '').includes(filters.state.toLowerCase())
+        (a.state?.name?.toLowerCase() || '').includes(
+          filters.state.toLowerCase()
+        )
     );
 
     if (delivered) {
-      result = result.filter((a) => a.delivered?.toUpperCase() === 'ENTREGADO');
-    } else {
-      result = result.filter((a) => a.delivered?.toUpperCase() !== 'ENTREGADO');
-    }
-
-    if (rol === 'Advisor' && view === 'customers') {
       result = result.filter(
-        (a) => a.advisor?.toLowerCase() === 'maria manrrique'
+        (a) => a.deliveryState?.toUpperCase() === 'ENTREGADO'
+      );
+    } else {
+      result = result.filter(
+        (a) => a.deliveryState?.toUpperCase() !== 'ENTREGADO'
       );
     }
 
@@ -111,17 +112,15 @@ const Table = ({ info = [], view, setSelected, rol, delivered = false }) => {
 
   return (
     <div>
-      {rol === 'Administrador' &&
-        view === 'customers' &&
-        selectedIds.length > 0 && (
-          <button
-            onClick={() => setShowModal(true)}
-            className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
-          >
-            Asignar asesor{' '}
-            <span className="font-semibold">{selectedIds.length}</span>
-          </button>
-        )}
+      {rol === 'ADMIN' && view === 'customers' && selectedIds.length > 0 && (
+        <button
+          onClick={() => setShowModal(true)}
+          className="mb-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
+        >
+          Asignar asesor{' '}
+          <span className="font-semibold">{selectedIds.length}</span>
+        </button>
+      )}
 
       <table className="min-w-full text-sm text-left text-gray-700">
         <Thead rol={rol} view={view} delivered={delivered} />
@@ -146,25 +145,25 @@ const Table = ({ info = [], view, setSelected, rol, delivered = false }) => {
                     : 'hover:bg-gray-50'
                 }`}
               >
-                {rol === 'Administrador' &&
-                  view === 'customers' &&
-                  !delivered && (
-                    <td className="px-4 py-3 text-center">
-                      {info.advisor !== 'Sin Asignar' ? (
-                        <CheckIcon className="w-5 h-5 text-green-600 mx-auto" />
-                      ) : (
-                        <input
-                          type="checkbox"
-                          checked={selectedIds.includes(info.id)}
-                          onChange={() => toggleCheckbox(info)}
-                          className="w-4 h-4 cursor-pointer"
-                        />
-                      )}
-                    </td>
-                  )}
+                {rol === 'ADMIN' && view === 'customers' && !delivered && (
+                  <td className="px-4 py-3 text-center">
+                    {info.advisor ? (
+                      <CheckIcon className="w-5 h-5 text-green-600 mx-auto" />
+                    ) : (
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.includes(info.id)}
+                        onChange={() => toggleCheckbox(info)}
+                        className="w-4 h-4 cursor-pointer"
+                      />
+                    )}
+                  </td>
+                )}
 
-                {rol === 'Administrador' && view === 'customers' && (
-                  <td className="px-4 py-3">{info.advisor}</td>
+                {rol === 'ADMIN' && view === 'customers' && (
+                  <td className="px-4 py-3">
+                    {info.advisor?.name || 'Sin Asignar'}
+                  </td>
                 )}
                 <td className="px-4 py-3">{info.name}</td>
                 <td className="px-4 py-3">{info.email}</td>
@@ -197,7 +196,7 @@ const Table = ({ info = [], view, setSelected, rol, delivered = false }) => {
                   )}
                 </td>
                 {view === 'customers' && (
-                  <td className="px-4 py-3">{info.state}</td>
+                  <td className="px-4 py-3">{info.state.name}</td>
                 )}
 
                 <td className="px-4 py-3 text-center">

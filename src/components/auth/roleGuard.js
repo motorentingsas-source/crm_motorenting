@@ -10,10 +10,9 @@ export default function RoleGuard({ allowedRoles, children }) {
 
   useEffect(() => {
     if (loading) return;
-
     if (!usuario) {
       router.replace('/CRM');
-    } else if (!allowedRoles.includes(usuario.rol)) {
+    } else if (!allowedRoles.includes(usuario.role)) {
       router.replace('/CRM/dashboard/customers');
     }
   }, [usuario, loading]);
@@ -26,7 +25,7 @@ export default function RoleGuard({ allowedRoles, children }) {
     );
   }
 
-  if (!usuario || !allowedRoles.includes(usuario.rol)) {
+  if (!usuario || !allowedRoles.includes(usuario.role)) {
     return null;
   }
 

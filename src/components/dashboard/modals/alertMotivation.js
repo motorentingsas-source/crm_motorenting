@@ -1,6 +1,6 @@
 'use client';
 
-import { dataMotivation } from '@/api/messageMotivation';
+import { dataMotivation } from '@/lib/api/messageMotivation';
 
 export default function AlertMotivation({ onClose }) {
   const motivationMessage = dataMotivation;

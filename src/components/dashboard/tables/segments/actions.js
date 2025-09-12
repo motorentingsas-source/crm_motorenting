@@ -18,7 +18,7 @@ export default function Actions({
 }) {
   return (
     <div className="flex justify-center space-x-3">
-      {rol === 'Administrador' && view === 'customers' && !delivered && (
+      {rol === 'ADMIN' && view === 'customers' && !delivered && (
         <div className="relative group flex items-center">
           <button
             onClick={() => setShowModalChangeAdvisor(info)}
@@ -72,7 +72,7 @@ export default function Actions({
         </div>
       )}
 
-      {rol === 'Administrador' && (
+      {rol === 'ADMIN' && (
         <div className="relative group flex items-center">
           <button
             onClick={() => handleDelete(info.id)}

@@ -5,42 +5,24 @@ import { useRouter } from 'next/navigation';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '@/context/authContext';
 
-const users = [
-  {
-    email: 'administrador@gmail.com',
-    name: 'Yordi',
-    contrasena: '12345',
-    rol: 'Administrador',
-  },
-  {
-    email: 'asesor@gmail.com',
-    name: 'Maria Manrrique',
-    contrasena: '12345',
-    rol: 'Advisor',
-  },
-];
-
 export default function Login() {
   const [email, setEmail] = useState('');
-  const [contrasena, setContrasena] = useState('');
-  const [mostrarContrasena, setMostrarContrasena] = useState(false);
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
-    const usuario = users.find(
-      (u) => u.email === email && u.contrasena === contrasena
-    );
-
-    if (usuario) {
-      login(usuario);
+    try {
+      await login(email, password);
       router.push('/CRM/dashboard/customers');
-    } else {
-      setError('Credenciales incorrectas');
+    } catch (err) {
+      setError(err.message || 'Error en login');
     }
-  };
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg pb-9 mx-4 sm:mx-auto">
@@ -91,22 +73,22 @@ export default function Login() {
             <div className="relative">
               <input
                 id="password"
-                type={mostrarContrasena ? 'text' : 'password'}
+                type={showPassword ? 'text' : 'password'}
                 name="password"
                 autoComplete="current-password"
-                value={contrasena}
-                onChange={(e) => setContrasena(e.target.value)}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="Ingrese su contraseña"
                 required
                 className="w-full px-4 py-2 pr-10 border text-gray-600 text-xs rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-transparent placeholder-gray-500"
               />
               <button
                 type="button"
-                onClick={() => setMostrarContrasena(!mostrarContrasena)}
+                onClick={() => setShowPassword(!showPassword)}
                 className="absolute inset-y-0 right-3 flex items-center text-gray-700 hover:text-gray-800 cursor-pointer"
                 tabIndex={-1}
               >
-                {mostrarContrasena ? (
+                {showPassword ? (
                   <EyeSlashIcon className="h-5 w-5" />
                 ) : (
                   <EyeIcon className="h-5 w-5" />

@@ -4,11 +4,10 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import BtnReturn from '@/components/dashboard/buttons/return';
 import BtnSave from '@/components/dashboard/buttons/save';
-import { customers } from '@/api/customers';
-import { stateCustomer } from '@/api/stateCustomer';
+import { stateCustomer } from '@/lib/api/stateCustomer';
 import CommentsHistory from '@/components/dashboard/comments/history';
 import AlertModal from '@/components/dashboard/modals/alertModal';
-import { stateDelivery } from '@/api/stateDelivery';
+import { stateDelivery } from '@/lib/api/stateDelivery';
 import { useAuth } from '@/context/authContext';
 
 export default function EditCustomer() {
@@ -17,7 +16,7 @@ export default function EditCustomer() {
   const { id } = params;
   const { usuario } = useAuth();
 
-  const [customer, setCustomer] = useState(null);
+  const [customer, setCustomer] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [alert, setAlert] = useState({ type: '', message: '', url: '' });
@@ -81,7 +80,7 @@ export default function EditCustomer() {
       </p>
     );
 
-  const isLocked = usuario.rol === 'Advisor' && customer.state !== 'VENTA';
+  const isLocked = usuario.role === 'ASESOR' && customer.state !== 'VENTA';
 
   return (
     <div className="w-full bg-white shadow-lg rounded-2xl p-8 mt-6 border border-gray-100">

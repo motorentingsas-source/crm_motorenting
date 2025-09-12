@@ -4,9 +4,13 @@ import { useState } from 'react';
 import ViewModal from '../../viewModal';
 import Table from '@/components/dashboard/tables/table';
 import { useAuth } from '@/context/authContext';
-import { customers } from '@/api/customers';
-
+import useApi from '@/lib/api/useApi';
 export default function Delivered() {
+  const {
+    data: customers,
+    loading,
+    error,
+  } = useApi('/customers?delivered=true');
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const { usuario } = useAuth();
 
@@ -20,10 +24,10 @@ export default function Delivered() {
 
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
         <Table
-          info={customers}
+          info={customers || []}
           view="customers"
           setSelected={setSelectedCustomer}
-          rol={usuario?.rol}
+          rol={usuario?.role}
           delivered={true}
         />
         {selectedCustomer && (

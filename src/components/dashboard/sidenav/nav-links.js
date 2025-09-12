@@ -30,26 +30,26 @@ export default function NavLinks() {
       name: 'Clientes',
       href: '/CRM/dashboard/customers',
       icon: UsersIcon,
-      roles: ['Administrador', 'Advisor'],
+      roles: ['ADMIN', 'ASESOR'],
     },
     {
       name: 'Asesores',
       href: '/CRM/dashboard/advisors',
       icon: UserGroupIcon,
-      roles: ['Administrador'],
+      roles: ['ADMIN'],
     },
     {
       name: 'Entregados',
       href: '/CRM/dashboard/delivered',
       icon: ClipboardDocumentCheckIcon,
-      roles: ['Administrador', 'Advisor'],
+      roles: ['ADMIN', 'ASESOR'],
     },
   ];
 
   return (
     <nav className="flex flex-col w-full px-6 space-y-4">
       {links
-        .filter((link) => link.roles.includes(usuario.rol))
+        .filter((link) => link.roles.includes(usuario.role))
         .map((link) => {
           const LinkIcon = link.icon;
           const isActive = pathname.startsWith(link.href);

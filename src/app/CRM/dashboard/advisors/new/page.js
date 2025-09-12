@@ -16,7 +16,7 @@ export default function NewAdvisor() {
     direccion: '',
     departamento: '',
     ciudad: '',
-    rol: '',
+    role: '',
     estado: '',
   });
   const [alert, setAlert] = useState({ type: '', message: '', url: '' });
@@ -159,7 +159,7 @@ export default function NewAdvisor() {
             <select
               id="rol"
               name="rol"
-              value={formData.rol}
+              value={formData.role}
               onChange={handleChange}
               className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
                          focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"

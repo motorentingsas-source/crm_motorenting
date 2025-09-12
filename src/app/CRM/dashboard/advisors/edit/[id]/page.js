@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import BtnReturn from '@/components/dashboard/buttons/return';
 import BtnSave from '@/components/dashboard/buttons/save';
-import { advisors } from '@/api/advisors';
+import { advisors } from '@/lib/api/advisors';
 import AlertModal from '@/components/dashboard/modals/alertModal';
 
 export default function EditAdvisor() {

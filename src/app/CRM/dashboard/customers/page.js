@@ -6,24 +6,32 @@ import {
   PlusIcon,
   DocumentArrowUpIcon,
 } from '@heroicons/react/24/outline';
-import ViewModal from '../../viewModal';
-import Table from '@/components/dashboard/tables/table';
 import Link from 'next/link';
 import { useAuth } from '@/context/authContext';
-import { customers } from '@/api/customers';
+import useApi from '@/lib/api/useApi';
+import { importCustomers } from '@/lib/api/customer';
+import ViewModal from '../../viewModal';
+import Table from '@/components/dashboard/tables/table';
 
 export default function Customers() {
   const [archivo, setArchivo] = useState(null);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const { usuario } = useAuth();
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) setArchivo(file);
-  };
+  const { data, loading, error, execute } = useApi('/customers');
 
-  const handleRemoveFile = () => {
-    setArchivo(null);
+  const handleFileChange = (e) => setArchivo(e.target.files?.[0] || null);
+  const handleRemoveFile = () => setArchivo(null);
+
+  const handleUpload = async () => {
+    if (!archivo) return;
+    try {
+      await importCustomers(archivo);
+      setArchivo(null);
+      await execute();
+    } catch (err) {
+      alert(err.message || 'Error al subir archivo');
+    }
   };
 
   return (
@@ -36,13 +44,13 @@ export default function Customers() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
           <Link
             href="/CRM/dashboard/customers/new"
-            className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm transition cursor-pointer"
+            className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm transition"
           >
             <PlusIcon className="w-4 h-4" />
             <span>Agregar cliente</span>
           </Link>
 
-          {usuario?.rol === 'Administrador' && (
+          {usuario?.role === 'ADMIN' && (
             <>
               {!archivo ? (
                 <label className="flex items-center gap-2 cursor-pointer bg-orange-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-orange-700 transition">
@@ -67,6 +75,12 @@ export default function Customers() {
                   >
                     <XMarkIcon className="w-5 h-5" />
                   </button>
+                  <button
+                    onClick={handleUpload}
+                    className="ml-2 bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 text-sm"
+                  >
+                    Subir
+                  </button>
                 </div>
               )}
             </>
@@ -75,12 +89,18 @@ export default function Customers() {
       </div>
 
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+        {loading && (
+          <p className="text-gray-500 text-sm p-4">Cargando clientes...</p>
+        )}
+        {error && <p className="text-red-500 text-sm p-4">{error}</p>}
+
         <Table
-          info={customers}
+          info={data || []}
           view="customers"
           setSelected={setSelectedCustomer}
-          rol={usuario?.rol}
+          rol={usuario?.role}
         />
+
         {selectedCustomer && (
           <ViewModal
             data={selectedCustomer}
