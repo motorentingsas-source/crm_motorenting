@@ -9,18 +9,11 @@ import {
 } from '@heroicons/react/24/outline';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 export default function NavLinks() {
-  const { usuario, loading } = useAuth();
+  const { usuario, loading, logout } = useAuth();
   const pathname = usePathname();
-  const router = useRouter();
-
-  const handleLogout = () => {
-    localStorage.removeItem('usuario');
-    localStorage.removeItem('hasSeenMotivation');
-    router.push('/CRM');
-  };
 
   if (loading) return null;
   if (!usuario) return null;
@@ -71,7 +64,7 @@ export default function NavLinks() {
         })}
 
       <button
-        onClick={handleLogout}
+        onClick={logout}
         className="flex items-center space-x-3 px-3 py-2 rounded-lg transition text-gray-300 hover:text-white hover:bg-gray-800 cursor-pointer"
       >
         <ArrowLeftOnRectangleIcon className="w-6 h-6" />

@@ -80,7 +80,6 @@ export default function Customers() {
           fetchData={fetchCustomers}
           loading={loading}
           error={error}
-          delivered={false}
         />
 
         {selectedCustomer && (

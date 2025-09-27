@@ -13,12 +13,11 @@ export default function Actions({
   view,
   setSelected,
   handleDelete,
-  delivered,
   setShowModalChangeAdvisor,
 }) {
   return (
     <div className="flex justify-center space-x-3">
-      {rol === 'ADMIN' && view === 'customers' && !delivered && (
+      {rol === 'ADMIN' && view === 'customers' && (
         <div className="relative group flex items-center">
           <button
             onClick={() => setShowModalChangeAdvisor(info)}
@@ -54,7 +53,7 @@ export default function Actions({
         </span>
       </div>
 
-      {!delivered && (
+      {view !== 'delivered' && (
         <div className="relative group flex items-center">
           <Link
             href={isLocked ? '#' : `/CRM/dashboard/${view}/edit/${info.id}`}

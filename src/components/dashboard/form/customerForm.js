@@ -32,10 +32,15 @@ export default function CustomerForm({
   useEffect(() => {
     fetchUsers();
     fetchStates();
-  }, []);
+  }, [formData]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+
+    if (name === 'plateNumber') {
+      value = value.toUpperCase();
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -60,6 +65,10 @@ export default function CustomerForm({
       console.error(err);
     }
   };
+
+  const shouldShowDeliveryState = Number(formData.stateId) === 18;
+  const shouldShowPlateNumber =
+    shouldShowDeliveryState && formData.deliveryState === 'ENTREGADO';
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
@@ -137,6 +146,50 @@ export default function CustomerForm({
             ))}
           </select>
         </div>
+
+        {shouldShowDeliveryState && (
+          <>
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Entregado
+              </label>
+              <select
+                name="deliveryState"
+                value={formData.deliveryState || ''}
+                onChange={handleChange}
+                disabled={isLocked}
+                className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
+                focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+                required
+              >
+                <option value="">Seleccione un estado</option>
+                <option value="ENTREGADO">Entregado</option>
+                <option value="PENDIENTE_ENTREGA">Pendiente de Entrega</option>
+              </select>
+            </div>
+
+            {shouldShowPlateNumber && (
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-1">
+                  Número de Placa
+                </label>
+                <input
+                  type="text"
+                  name="plateNumber"
+                  value={formData.plateNumber || ''}
+                  onChange={handleChange}
+                  disabled={isLocked}
+                  className={`w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm focus:outline-none transition ${
+                    isLocked
+                      ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                      : 'focus:ring-2 focus:ring-orange-500 focus:border-orange-500'
+                  }`}
+                  required
+                />
+              </div>
+            )}
+          </>
+        )}
       </div>
 
       {mode === 'edit' && (

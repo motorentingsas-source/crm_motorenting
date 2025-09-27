@@ -13,14 +13,7 @@ import useUsers from '@/lib/api/hooks/useUsers';
 import AssignAdvisor from './segments/assignAdvisor';
 import ContentData from './segments/contentData';
 
-const Table = ({
-  info = [],
-  view,
-  setSelected,
-  rol,
-  delivered = false,
-  fetchData,
-}) => {
+const Table = ({ info = [], view, setSelected, rol, fetchData }) => {
   const [filtered, setFiltered] = useState(info);
   const [selectedIds, setSelectedIds] = useState([]);
   const [selectedAdvisor, setSelectedAdvisor] = useState('');
@@ -81,19 +74,9 @@ const Table = ({
       return nameMatch && emailMatch && phoneMatch;
     });
 
-    if (delivered) {
-      result = result.filter(
-        (a) => a.deliveryState?.toUpperCase() === 'ENTREGADO'
-      );
-    } else {
-      result = result.filter(
-        (a) => a.deliveryState?.toUpperCase() !== 'ENTREGADO'
-      );
-    }
-
     setFiltered(result);
     setCurrentPage(1);
-  }, [filters, info, view, delivered]);
+  }, [filters, info, view]);
 
   useEffect(() => {
     fetchAdvisors();
@@ -213,7 +196,7 @@ const Table = ({
         setShowModal={setShowModal}
       />
       <table className="min-w-full text-sm text-left text-gray-700">
-        <Thead rol={rol} view={view} delivered={delivered} />
+        <Thead rol={rol} view={view} />
 
         <tbody>
           <InputFilters
@@ -221,7 +204,6 @@ const Table = ({
             view={view}
             filters={filters}
             handleFilterChange={handleFilterChange}
-            delivered={delivered}
           />
 
           <ContentData
@@ -229,7 +211,6 @@ const Table = ({
             getCustomerLockState={getCustomerLockState}
             rol={rol}
             view={view}
-            delivered={delivered}
             setSelected={setSelected}
             toggleCheckbox={toggleCheckbox}
             selectedIds={selectedIds}

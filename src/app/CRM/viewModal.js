@@ -9,6 +9,8 @@ export default function ViewModal({ data, type, onClose }) {
   const formatDate = (date) =>
     date ? new Date(date).toLocaleDateString('es-CO') : 'No disponible';
 
+  const isDelivered = type === 'delivered';
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl relative overflow-hidden">
@@ -19,11 +21,17 @@ export default function ViewModal({ data, type, onClose }) {
           <XMarkIcon className="w-6 h-6" />
         </button>
 
-        <div className="bg-gradient-to-r bg-gray-900 to-orange-600 text-white px-6 py-5 rounded-t-2xl">
+        <div className="bg-gradient-to-r from-gray-900 to-orange-600 text-white px-6 py-5 rounded-t-2xl">
           <h2 className="text-2xl font-bold">
-            Detalles del {type === 'advisor' ? 'Asesor' : 'Cliente'}
+            {isDelivered
+              ? 'Detalles de Cliente Entregado'
+              : `Detalles del ${type === 'advisor' ? 'Asesor' : 'Cliente'}`}
           </h2>
-          <p className="text-sm opacity-80">Información completa y estado</p>
+          <p className="text-sm opacity-80">
+            {isDelivered
+              ? 'Información final de la entrega'
+              : 'Información completa y estado'}
+          </p>
         </div>
 
         <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -32,60 +40,86 @@ export default function ViewModal({ data, type, onClose }) {
               <p className="font-semibold text-gray-700">Nombre:</p>
               <p className="text-gray-900">{data.name}</p>
             </div>
+
             <div>
               <p className="font-semibold text-gray-700">Correo:</p>
-              <p className="text-gray-900">{data.email}</p>
+              <p className="text-gray-900">{data.email || 'No disponible'}</p>
             </div>
-            <div>
-              <p className="font-semibold text-gray-700">
-                Fecha de Nacimiento:
-              </p>
-              <p className="text-gray-900">{formatDate(data.birthdate)}</p>
-            </div>
+
             <div>
               <p className="font-semibold text-gray-700">Teléfono:</p>
-              <p className="text-gray-900">{data.phone}</p>
+              <p className="text-gray-900">{data.phone || 'No disponible'}</p>
             </div>
-            <div>
-              <p className="font-semibold text-gray-700">Dirección:</p>
-              <p className="text-gray-900">{data.address}</p>
-            </div>
+
+            {isDelivered && (
+              <div>
+                <p className="font-semibold text-gray-700">Placa:</p>
+                <p className="text-gray-900">
+                  {data.plateNumber || 'No aplica'}
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="space-y-4">
-            <div>
-              <p className="font-semibold text-gray-700">Ciudad:</p>
-              <p className="text-gray-900">{data.city}</p>
-            </div>
-            <div>
-              <p className="font-semibold text-gray-700">Departamento:</p>
-              <p className="text-gray-900">{data.department}</p>
-            </div>
-            <div>
-              <p className="font-semibold text-gray-700">Documento:</p>
-              <p className="text-gray-900">{data.document}</p>
-            </div>
-            <div>
-              <p className="font-semibold text-gray-700">Estado:</p>
-              <span
-                className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
-                  data.state?.name === 'Sin Contactar' ||
-                  data.status === 'INACTIVE'
-                    ? 'bg-yellow-100 text-yellow-800'
-                    : 'bg-green-100 text-green-800'
-                }`}
-              >
-                {data?.state?.name || data?.status}
-              </span>
-            </div>
-            <div>
-              <p className="font-semibold text-gray-700">Fecha de Registro:</p>
-              <p className="text-gray-900">{formatDate(data.createdAt)}</p>
-            </div>
+            {isDelivered ? (
+              <>
+                <div>
+                  <p className="font-semibold text-gray-700">
+                    Asesor que vendió:
+                  </p>
+                  <p className="text-gray-900">
+                    {data.advisor?.name || 'Sin asignar'}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-semibold text-gray-700">
+                    Fecha de Entrega:
+                  </p>
+                  <p className="text-gray-900">
+                    {formatDate(data.deliveryDate)}
+                  </p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <p className="font-semibold text-gray-700">Ciudad:</p>
+                  <p className="text-gray-900">{data.city}</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-700">Departamento:</p>
+                  <p className="text-gray-900">{data.department}</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-700">Documento:</p>
+                  <p className="text-gray-900">{data.document}</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-700">Estado:</p>
+                  <span
+                    className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                      data.state?.name === 'Sin Contactar' ||
+                      data.status === 'INACTIVE'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-green-100 text-green-800'
+                    }`}
+                  >
+                    {data?.state?.name || data?.status}
+                  </span>
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-700">
+                    Fecha de Registro:
+                  </p>
+                  <p className="text-gray-900">{formatDate(data.createdAt)}</p>
+                </div>
+              </>
+            )}
           </div>
         </div>
-
-        {type === 'customer' && (
+        {type !== 'advisor' && (
           <div className="border-t p-6">
             <h3 className="text-lg font-semibold text-gray-800 mb-3">
               Historial de comentarios

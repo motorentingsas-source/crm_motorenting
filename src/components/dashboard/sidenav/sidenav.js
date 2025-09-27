@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import NavLinks from './nav-links';
 import { useAuth } from '@/context/authContext';
+import Avatar from '../profile/avatar';
 
 export default function SideNavigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,16 +33,10 @@ export default function SideNavigation() {
           </button>
         </div>
 
-        <div className="w-24 h-24 bg-gray-700 rounded-full mb-2 flex justify-center items-center">
-          <img
-            src="/images/logoMotoRenting.png"
-            alt="Logo MotoRenting"
-            style={{ width: 'auto', height: '40px' }}
-          />
-        </div>
+        <Avatar perfil={usuario} setPerfil={() => {}} />
         <Link
           href="/CRM/dashboard/profile/edit"
-          className="text-sm text-oragen-400 hover:underline"
+          className="text-sm text-white font-semibold underline hover:underline"
         >
           Editar perfil
         </Link>

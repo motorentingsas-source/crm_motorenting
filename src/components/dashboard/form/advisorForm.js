@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BtnClean from '@/components/dashboard/buttons/clear';
 import BtnSave from '@/components/dashboard/buttons/save';
 import BtnReturn from '@/components/dashboard/buttons/return';
@@ -13,10 +13,16 @@ export default function AdvisorForm({
   onSubmit,
   loading,
   mode = 'create',
+  profile = false,
+  updateLocalStorage,
 }) {
-  const [formData, setFormData] = useState(initialData);
+  const [formData, setFormData] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [alert, setAlert] = useState({ type: '', message: '', url: '' });
+
+  useEffect(() => {
+    setFormData(initialData);
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,22 +37,23 @@ export default function AdvisorForm({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const payload =
         mode === 'edit' && !formData.password
           ? { ...formData, password: undefined }
           : formData;
-
       await onSubmit(payload);
-
+      profile && (await updateLocalStorage(payload));
       setAlert({
         type: 'success',
-        message:
-          mode === 'create'
-            ? 'Asesor creado correctamente.'
-            : 'Asesor actualizado correctamente.',
-        url: '/CRM/dashboard/advisors',
+        message: profile
+          ? 'Perfil actualizado correctamente.'
+          : mode === 'create'
+          ? 'Asesor creado correctamente.'
+          : 'Asesor actualizado correctamente.',
+
+        url: !profile ? '/CRM/dashboard/advisors' : '',
+        onClose: () => setAlert({ type: '', message: '', url: '' }),
       });
     } catch (err) {
       setAlert({
@@ -59,10 +66,17 @@ export default function AdvisorForm({
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 mt-6 border border-gray-100">
       <h2 className="text-3xl font-bold text-gray-800 mb-2">
-        {mode === 'create' ? 'Crear Asesor Nuevo' : 'Editar Asesor'}
+        {profile
+          ? 'Perfil de Usuario'
+          : mode === 'create'
+          ? 'Crear Asesor Nuevo'
+          : 'Editar Asesor'}
       </h2>
+
       <p className="text-sm text-gray-500 mb-6">
-        {mode === 'create'
+        {profile
+          ? 'Actualice su información personal y de contacto.'
+          : mode === 'create'
           ? 'Ingrese la información personal y de contacto para registrar un nuevo asesor.'
           : 'Actualice la información personal y de contacto del asesor.'}
       </p>
@@ -175,7 +189,11 @@ export default function AdvisorForm({
         </div>
 
         <div className="flex justify-end mt-6 gap-3">
-          <BtnReturn route="/CRM/dashboard/advisors" />
+          <BtnReturn
+            route={`${
+              profile ? '/CRM/dashboard/customers' : '/CRM/dashboard/advisors'
+            }`}
+          />
           {mode === 'create' && <BtnClean handleReset={handleReset} />}
           <BtnSave disabled={loading} />
         </div>

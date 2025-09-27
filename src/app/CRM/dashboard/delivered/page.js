@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import ViewModal from '../../viewModal';
 import Table from '@/components/dashboard/tables/table';
 import { useAuth } from '@/context/authContext';
@@ -8,23 +8,23 @@ import useCustomers from '@/lib/api/hooks/useCustomers';
 
 export default function Delivered() {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const { usuario } = useAuth();
   const [customers, setCustomers] = useState([]);
+  const { usuario } = useAuth();
 
-  const { getCustomers, loading, error } = useCustomers();
+  const { getDeliveredCustomers, loading, error } = useCustomers();
 
-  const fetchCustomers = async () => {
+  const fetchData = useCallback(async () => {
     try {
-      const { data } = await getCustomers();
-      setCustomers(data);
+      const { data } = await getDeliveredCustomers();
+      setCustomers(data || []);
     } catch (err) {
       console.error(err);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchCustomers();
-  }, [fetchCustomers]);
+    fetchData();
+  }, [fetchData]);
 
   return (
     <div className="w-full p-4">
@@ -35,19 +35,27 @@ export default function Delivered() {
       </div>
 
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+        {loading && (
+          <p className="text-gray-500 text-sm p-4">
+            Cargando clientes entregados...
+          </p>
+        )}
+        {error && <p className="text-red-500 text-sm p-4">{error}</p>}
+
         <Table
-          info={customers || []}
-          view="customers"
+          info={customers}
+          view="delivered"
           setSelected={setSelectedCustomer}
           rol={usuario?.role}
-          fetchCustomers={fetchCustomers}
+          fetchData={fetchData}
           loading={loading}
           error={error}
         />
+
         {selectedCustomer && (
           <ViewModal
             data={selectedCustomer}
-            type="customer"
+            type="delivered"
             onClose={() => setSelectedCustomer(null)}
           />
         )}

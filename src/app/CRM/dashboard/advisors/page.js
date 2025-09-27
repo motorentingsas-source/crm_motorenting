@@ -8,14 +8,12 @@ import Link from 'next/link';
 import RoleGuard from '@/components/auth/roleGuard';
 import { useAuth } from '@/context/authContext';
 import MessageEditorModal from '@/components/dashboard/modals/messageEditorModal';
-import { dataMotivation } from '@/lib/api/messageMotivation';
 import { getUsers } from '@/lib/api/users';
 
 export default function Advisors() {
   const [advisors, setAdvisors] = useState([]);
   const [selectedAdvisors, setSelectedAdvisors] = useState(null);
   const [showEditor, setShowEditor] = useState(false);
-  const [motivationMessage, setMotivationMessage] = useState(dataMotivation);
   const { usuario } = useAuth();
 
   const fetchAdvisors = async () => {
@@ -66,7 +64,6 @@ export default function Advisors() {
             fetchData={fetchAdvisors}
             loading={false}
             error={null}
-            delivered={false}
           />
           {selectedAdvisors && (
             <ViewModal
@@ -79,11 +76,7 @@ export default function Advisors() {
       </div>
 
       {showEditor && (
-        <MessageEditorModal
-          initialMessage={motivationMessage}
-          onSave={setMotivationMessage}
-          onClose={() => setShowEditor(false)}
-        />
+        <MessageEditorModal onClose={() => setShowEditor(false)} />
       )}
     </RoleGuard>
   );

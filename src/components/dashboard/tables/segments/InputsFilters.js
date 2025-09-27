@@ -5,23 +5,28 @@ export default function InputFilters({
   view,
   filters,
   handleFilterChange,
-  delivered,
 }) {
   const allFilters = [
     {
       name: 'advisor',
       title: 'Asesor',
-      show: rol === 'ADMIN' && view === 'customers',
+      show: (rol === 'ADMIN' && view === 'customers') || view === 'delivered',
     },
     { name: 'name', title: 'Nombre', show: true },
     { name: 'email', title: 'Correo', show: true },
     { name: 'phone', title: 'Teléfono', show: true },
     { name: 'state', title: 'Estado', show: view === 'customers' },
+    { name: 'plateNumber', title: 'Placa', show: view === 'delivered' },
+    {
+      name: 'deliveryDate',
+      title: 'Fecha Entrega',
+      show: view === 'delivered',
+    },
   ];
 
   return (
     <tr>
-      {rol === 'ADMIN' && view === 'customers' && !delivered && <th></th>}
+      {rol === 'ADMIN' && view === 'customers' && <th></th>}
 
       {allFilters
         .filter((f) => f.show)

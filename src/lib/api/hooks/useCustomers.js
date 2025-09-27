@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import {
   getCustomers,
+  getDeliveredCustomers,
   getCustomerById,
   createCustomer,
   updateCustomer,
@@ -32,6 +33,7 @@ export default function useCustomers() {
 
   return {
     getCustomers: () => wrap(getCustomers),
+    getDeliveredCustomers: () => wrap(getDeliveredCustomers),
     getCustomerById: (id) => wrap(getCustomerById, id),
     createCustomer: (dto) => wrap(createCustomer, dto),
     updateCustomer: (id, dto) => wrap(updateCustomer, id, dto),

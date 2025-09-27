@@ -42,3 +42,13 @@ export async function deleteUser(id) {
 export async function toggleUserRole(id) {
   return apiFetch(`/users/${id}`, { method: 'PATCH' });
 }
+
+export async function uploadUserAvatar(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  return apiFetch('/users/upload-avatar', {
+    method: 'POST',
+    body: formData,
+  });
+}

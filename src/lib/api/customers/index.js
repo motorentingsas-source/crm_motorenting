@@ -5,6 +5,10 @@ export async function getCustomers() {
   return apiFetch('/customers');
 }
 
+export async function getDeliveredCustomers() {
+  return apiFetch('/customers/delivered');
+}
+
 export async function getCustomerById(id) {
   return apiFetch(`/customers/${id}`);
 }

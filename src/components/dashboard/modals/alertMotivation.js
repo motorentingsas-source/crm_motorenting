@@ -1,9 +1,19 @@
 'use client';
 
-import { dataMotivation } from '@/lib/api/messageMotivation';
+import { useEffect, useState } from 'react';
+import useMotivation from '@/lib/api/hooks/useMotivation';
 
 export default function AlertMotivation({ onClose }) {
-  const motivationMessage = dataMotivation;
+  const { getMotivationMessage } = useMotivation();
+  const [motivationMessage, setMotivationMessage] = useState(null);
+
+  useEffect(() => {
+    getMotivationMessage().then((res) => {
+      if (res?.data) setMotivationMessage(res.data);
+    });
+  }, []);
+
+  if (!motivationMessage) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">

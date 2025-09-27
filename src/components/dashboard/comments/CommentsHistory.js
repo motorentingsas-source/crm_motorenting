@@ -1,8 +1,6 @@
 'use client';
 
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
-import { toZonedTime } from 'date-fns-tz';
+import { formatDateTime } from '@/lib/api/utils/formatDateTime';
 
 export default function CommentsHistory({ formData }) {
   const getInitial = (name) => (name ? name.charAt(0).toUpperCase() : '?');
@@ -28,14 +26,7 @@ export default function CommentsHistory({ formData }) {
         {formData?.comments?.length > 0 ? (
           formData.comments.map((c, index) => {
             const userName = c.createdBy?.name || 'Usuario desconocido';
-
-            const dateFormatted = c.createdAt
-              ? format(
-                  toZonedTime(new Date(c.createdAt), 'America/Bogota'),
-                  "dd 'de' MMMM yyyy, hh:mm a",
-                  { locale: es }
-                )
-              : 'Fecha no disponible';
+            const dateFormatted = formatDateTime(c.createdAt);
 
             return (
               <div
