@@ -31,7 +31,7 @@ const Table = ({ info = [], view, setSelected, rol, fetchData }) => {
   const { assignMultipleCustomers, loading, assignAdvisor } = useCustomers();
   const { deleteCustomer, loading: deleting, error } = useCustomers();
 
-  const { canViewAll } = usePermissions();
+  const { canViewAll, canCreate } = usePermissions();
 
   const [filters, setFilters] = useState({
     role: '',
@@ -107,7 +107,7 @@ const Table = ({ info = [], view, setSelected, rol, fetchData }) => {
   }, [filters, info, view]);
 
   useEffect(() => {
-    canViewAll && fetchAdvisors();
+    canViewAll && canCreate && fetchAdvisors();
   }, []);
 
   const fetchAdvisors = async () => {
@@ -121,7 +121,6 @@ const Table = ({ info = [], view, setSelected, rol, fetchData }) => {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    console.log();
     setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -179,7 +178,7 @@ const Table = ({ info = [], view, setSelected, rol, fetchData }) => {
   };
 
   const getCustomerLockState = (index, customer) => {
-    if (rol !== 'Advisor' || view !== 'customers') return false;
+    if (rol !== 'ASESOR' || view !== 'customers') return false;
     if (customer.comments?.length > 0) return false;
 
     for (let i = 0; i < index; i++) {

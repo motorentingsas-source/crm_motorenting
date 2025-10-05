@@ -1,3 +1,4 @@
+import { Roles } from '@/config/roles';
 import usePermissions from '@/hooks/usePermissions';
 
 export default function Thead({ rol, view }) {
@@ -17,7 +18,7 @@ export default function Thead({ rol, view }) {
             <th className="px-4 py-3">Asesor</th>
           </>
         )}
-        {view === 'delivered' && (
+        {view === 'delivered' && rol !== Roles.ASESOR && (
           <>
             <th className="px-4 py-3">Asesor</th>
           </>

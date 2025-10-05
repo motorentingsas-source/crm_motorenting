@@ -125,7 +125,11 @@ export default function CustomerForm({
             </select>
           </div>
         )}
-        <DepartaCiudad formData={formData} handleChange={handleChange} />
+        <DepartaCiudad
+          formData={formData}
+          handleChange={handleChange}
+          isLocked={isLocked}
+        />
 
         <div className="flex flex-col">
           <label className="text-sm font-medium text-gray-700 mb-1">
@@ -135,7 +139,6 @@ export default function CustomerForm({
             name="stateId"
             value={formData.stateId || ''}
             onChange={handleChange}
-            disabled={isLocked}
             className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
               focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
             required
@@ -159,7 +162,6 @@ export default function CustomerForm({
                 name="deliveryState"
                 value={formData.deliveryState || ''}
                 onChange={handleChange}
-                disabled={isLocked}
                 className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
                 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
                 required
@@ -180,12 +182,7 @@ export default function CustomerForm({
                   name="plateNumber"
                   value={formData.plateNumber || ''}
                   onChange={handleChange}
-                  disabled={isLocked}
-                  className={`w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm focus:outline-none transition ${
-                    isLocked
-                      ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-                      : 'focus:ring-2 focus:ring-orange-500 focus:border-orange-500'
-                  }`}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm focus:outline-none transition focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   required
                 />
               </div>

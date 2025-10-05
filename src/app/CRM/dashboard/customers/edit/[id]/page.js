@@ -6,6 +6,7 @@ import AlertModal from '@/components/dashboard/modals/alertModal';
 import { useAuth } from '@/context/authContext';
 import useCustomers from '@/lib/api/hooks/useCustomers';
 import CustomerForm from '@/components/dashboard/form/customerForm';
+import { Roles } from '@/config/roles';
 
 export default function EditCustomer() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function EditCustomer() {
   const [formData, setFormData] = useState({});
   const [newComment, setNewComment] = useState('');
   const [alert, setAlert] = useState({ type: '', message: '', url: '' });
+  const [isLocked, setIsLocked] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -36,6 +38,15 @@ export default function EditCustomer() {
         });
     }
   }, [id, router]);
+
+  useEffect(() => {
+    if (usuario.role === Roles.ASESOR) {
+      setIsLocked(true);
+    }
+    if (formData.plateNumber && formData.plateNumber !== '') {
+      setIsLocked(false);
+    }
+  }, [formData]);
 
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
@@ -80,8 +91,6 @@ export default function EditCustomer() {
         Cargando cliente...
       </p>
     );
-
-  const isLocked = usuario.role === 'ASESOR' && formData?.state !== 'VENTA';
 
   return (
     <div className="w-full bg-white shadow-lg rounded-2xl p-8 mt-6 border border-gray-100">

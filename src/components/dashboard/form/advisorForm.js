@@ -8,6 +8,8 @@ import DepartaCiudad from '@/components/dashboard/select/depart_ciud';
 import AlertModal from '@/components/dashboard/modals/alertModal';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { Roles } from '@/config/roles';
+import { useAuth } from '@/context/authContext';
+import usePermissions from '@/hooks/usePermissions';
 
 export default function AdvisorForm({
   initialData,
@@ -20,6 +22,8 @@ export default function AdvisorForm({
   const [formData, setFormData] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [alert, setAlert] = useState({ type: '', message: '', url: '' });
+  const { usuario } = useAuth();
+  const { canAssign, canViewAll } = usePermissions();
 
   useEffect(() => {
     setFormData(initialData);
@@ -65,6 +69,14 @@ export default function AdvisorForm({
     }
   };
 
+  const getRoleOptions = () => {
+    const allRoles = Object.values(Roles);
+    if (usuario?.role === Roles.SUPER_ADMIN) {
+      return allRoles;
+    }
+    return allRoles.filter((role) => role !== Roles.SUPER_ADMIN);
+  };
+
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 mt-6 border border-gray-100">
       <h2 className="text-3xl font-bold text-gray-800 mb-2">
@@ -107,7 +119,7 @@ export default function AdvisorForm({
                 value={formData[name] || ''}
                 onChange={handleChange}
                 className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-                           focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+                  focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
                 required={name}
               />
             </div>
@@ -115,44 +127,48 @@ export default function AdvisorForm({
 
           <DepartaCiudad formData={formData} handleChange={handleChange} />
 
-          <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-700 mb-1">
-              Rol
-            </label>
-            <select
-              name="role"
-              value={formData.role || ''}
-              onChange={handleChange}
-              className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-                         focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
-              required
-            >
-              <option value="">Selecciona un rol</option>
-              {Object.values(Roles).map((rol, i) => (
-                <option key={i} value={rol}>
-                  {rol}
-                </option>
-              ))}
-            </select>
-          </div>
+          {canAssign && (
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Rol
+              </label>
+              <select
+                name="role"
+                value={formData.role || ''}
+                onChange={handleChange}
+                className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
+                focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+                required
+              >
+                <option value="">Selecciona un rol</option>
+                {getRoleOptions().map((rol) => (
+                  <option key={rol} value={rol}>
+                    {rol}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
-          <div className="flex flex-col">
-            <label className="text-sm font-medium text-gray-700 mb-1">
-              Estado
-            </label>
-            <select
-              name="status"
-              value={formData.status || ''}
-              onChange={handleChange}
-              className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-                         focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
-              required
-            >
-              <option value="">Selecciona un estado</option>
-              <option value="ACTIVE">Activo</option>
-              <option value="INACTIVE">Inactivo</option>
-            </select>
-          </div>
+          {canViewAll && (
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Estado
+              </label>
+              <select
+                name="status"
+                value={formData.status || ''}
+                onChange={handleChange}
+                className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
+                focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+                required
+              >
+                <option value="">Selecciona un estado</option>
+                <option value="ACTIVE">Activo</option>
+                <option value="INACTIVE">Inactivo</option>
+              </select>
+            </div>
+          )}
 
           <div className="flex flex-col">
             <label
@@ -174,7 +190,7 @@ export default function AdvisorForm({
                     : 'Dejar en blanco si no desea cambiarla'
                 }
                 className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-             focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+                  focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
                 required={mode === 'create'}
               />
               <button

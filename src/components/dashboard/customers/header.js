@@ -12,16 +12,18 @@ export default function Header({
   handleRemoveFile,
   handleUpload,
 }) {
-  const { canImport } = usePermissions();
+  const { canImport, canCreate } = usePermissions();
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-      <Link
-        href="/CRM/dashboard/customers/new"
-        className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm transition"
-      >
-        <PlusIcon className="w-4 h-4" />
-        <span>Agregar cliente</span>
-      </Link>
+      {canCreate && (
+        <Link
+          href="/CRM/dashboard/customers/new"
+          className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm transition"
+        >
+          <PlusIcon className="w-4 h-4" />
+          <span>Agregar cliente</span>
+        </Link>
+      )}
 
       {canImport && (
         <>

@@ -1,5 +1,6 @@
 import usePermissions from '@/hooks/usePermissions';
 import SearchFilter from './inputSearch/searchFilter';
+import { Roles } from '@/config/roles';
 
 export default function InputFilters({
   rol,
@@ -13,7 +14,9 @@ export default function InputFilters({
     {
       name: 'advisor',
       title: 'Asesor',
-      show: (canViewAll && view === 'customers') || view === 'delivered',
+      show:
+        (canViewAll && view === 'customers') ||
+        (view === 'delivered' && rol !== Roles.ASESOR),
     },
     { name: 'role', title: 'Rol', show: view === 'advisors' },
     { name: 'name', title: 'Nombre', show: true },

@@ -1,5 +1,6 @@
 export const ROLE_PERMISSIONS = {
   SUPER_ADMIN: {
+    canDoEverything: true,
     canViewAll: true,
     canCreate: true,
     canEdit: true,
@@ -9,6 +10,7 @@ export const ROLE_PERMISSIONS = {
     canAssign: true,
   },
   ADMIN: {
+    canDoEverything: false,
     canViewAll: true,
     canCreate: true,
     canEdit: true,
@@ -18,15 +20,17 @@ export const ROLE_PERMISSIONS = {
     canAssign: true,
   },
   COORDINADOR: {
+    canDoEverything: false,
     canViewAll: true,
-    canCreate: true,
-    canEdit: true,
+    canCreate: false,
+    canEdit: false,
     canDelete: false,
     canExport: false,
     canImport: true,
     canAssign: true,
   },
   ASESOR: {
+    canDoEverything: false,
     canViewAll: false,
     canCreate: true,
     canEdit: true,

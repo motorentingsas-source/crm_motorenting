@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { locations } from '@/lib/api/local/locations';
 
-export default function DepartaCiudad({ formData, handleChange }) {
+export default function DepartaCiudad({
+  formData,
+  handleChange,
+  isLocked = false,
+}) {
   const [availableCities, setAvailableCities] = useState([]);
 
   useEffect(() => {
@@ -27,9 +31,14 @@ export default function DepartaCiudad({ formData, handleChange }) {
           name="department"
           value={formData.department || ''}
           onChange={handleChange}
-          className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-                     focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+          className={`w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
+                     focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition ${
+                       isLocked
+                         ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                         : 'focus:ring-2 focus:ring-orange-500 focus:border-orange-500'
+                     }`}
           required
+          disabled={isLocked}
         >
           <option value="">Seleccione un departamento</option>
           {locations.map((d) => (
@@ -52,10 +61,13 @@ export default function DepartaCiudad({ formData, handleChange }) {
           name="city"
           value={formData.city || ''}
           onChange={handleChange}
-          disabled={!formData.department}
-          className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-                     focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition
-                     disabled:bg-gray-100 disabled:cursor-not-allowed"
+          disabled={!formData.department || isLocked}
+          className={`w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
+                     focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition ${
+                       isLocked
+                         ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
+                         : 'focus:ring-2 focus:ring-orange-500 focus:border-orange-500'
+                     }`}
           required
         >
           <option value="">
