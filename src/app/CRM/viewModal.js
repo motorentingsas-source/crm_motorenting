@@ -4,7 +4,6 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import CommentsHistory from '@/components/dashboard/comments/CommentsHistory';
 
 export default function ViewModal({ data, type, onClose }) {
-  console.log(data);
   if (!data) return null;
 
   const formatDate = (date) =>

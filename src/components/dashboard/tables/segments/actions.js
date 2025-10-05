@@ -1,3 +1,4 @@
+import usePermissions from '@/hooks/usePermissions';
 import {
   EyeIcon,
   TrashIcon,
@@ -15,9 +16,10 @@ export default function Actions({
   handleDelete,
   setShowModalChangeAdvisor,
 }) {
+  const { canAssign, canEdit, canDelete } = usePermissions();
   return (
     <div className="flex justify-center space-x-3">
-      {rol === 'ADMIN' && view === 'customers' && (
+      {canAssign && view === 'customers' && (
         <div className="relative group flex items-center">
           <button
             onClick={() => setShowModalChangeAdvisor(info)}
@@ -53,7 +55,7 @@ export default function Actions({
         </span>
       </div>
 
-      {view !== 'delivered' && (
+      {canEdit && view !== 'delivered' && (
         <div className="relative group flex items-center">
           <Link
             href={isLocked ? '#' : `/CRM/dashboard/${view}/edit/${info.id}`}
@@ -71,7 +73,7 @@ export default function Actions({
         </div>
       )}
 
-      {rol === 'ADMIN' && (
+      {canDelete && (
         <div className="relative group flex items-center">
           <button
             onClick={() => handleDelete(info.id, info.name, view)}

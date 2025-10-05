@@ -2,6 +2,7 @@ import { CheckIcon } from '@heroicons/react/24/outline';
 import Actions from './actions';
 import ConfirmDeleteModal from './confirmDeleteModal';
 import { formatDateTime } from '@/lib/api/utils/formatDateTime';
+import usePermissions from '@/hooks/usePermissions';
 
 export default function ContentData({
   paginatedData,
@@ -19,6 +20,8 @@ export default function ContentData({
   deleting,
   setShowModalChangeAdvisor,
 }) {
+  const { canAssign, canViewAll } = usePermissions();
+
   return (
     <>
       {paginatedData.map((info, index) => {
@@ -32,7 +35,7 @@ export default function ContentData({
                 : 'hover:bg-gray-50'
             }`}
           >
-            {rol === 'ADMIN' && view === 'customers' && (
+            {canAssign && view === 'customers' && (
               <td className="px-4 py-3 text-center">
                 {info.advisor ? (
                   <CheckIcon className="w-5 h-5 text-green-600 mx-auto" />
@@ -47,14 +50,13 @@ export default function ContentData({
               </td>
             )}
 
-            {rol === 'ADMIN' &&
-              (view === 'customers' || view === 'delivered') && (
-                <td className="px-4 py-3">
-                  {info.advisor?.name || 'Sin Asignar'}
-                </td>
-              )}
+            {canViewAll && (view === 'customers' || view === 'delivered') && (
+              <td className="px-4 py-3">
+                {info.advisor?.name || 'Sin Asignar'}
+              </td>
+            )}
 
-            {rol === 'ADMIN' && view === 'advisors' && (
+            {canViewAll && view === 'advisors' && (
               <td className="px-4 py-3">{info.role}</td>
             )}
 

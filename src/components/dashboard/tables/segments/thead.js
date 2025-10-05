@@ -1,13 +1,17 @@
+import usePermissions from '@/hooks/usePermissions';
+
 export default function Thead({ rol, view }) {
+  const { canViewAll } = usePermissions();
+
   return (
     <thead className="bg-gray-100 border-b border-gray-200">
       <tr>
-        {view === 'advisors' && rol === 'ADMIN' && (
+        {view === 'advisors' && canViewAll && (
           <>
             <th className="px-4 py-3">Rol</th>
           </>
         )}
-        {view === 'customers' && rol === 'ADMIN' && (
+        {view === 'customers' && canViewAll && (
           <>
             <th className="px-4 py-3 text-center">Asignar</th>
             <th className="px-4 py-3">Asesor</th>

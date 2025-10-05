@@ -39,12 +39,14 @@ export default function AdvisorForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const payload =
-        mode === 'edit' && !formData.password
-          ? { ...formData, password: undefined }
-          : formData;
+      const payload = { ...formData };
+      if (mode === 'edit' && !payload.password) {
+        delete payload.password;
+      }
       await onSubmit(payload);
-      profile && (await updateLocalStorage(payload));
+      if (profile) {
+        await updateLocalStorage(payload);
+      }
       setAlert({
         type: 'success',
         message: profile
@@ -52,7 +54,6 @@ export default function AdvisorForm({
           : mode === 'create'
           ? 'Asesor creado correctamente.'
           : 'Asesor actualizado correctamente.',
-
         url: !profile ? '/CRM/dashboard/advisors' : '',
         onClose: () => setAlert({ type: '', message: '', url: '' }),
       });
@@ -173,7 +174,7 @@ export default function AdvisorForm({
                     : 'Dejar en blanco si no desea cambiarla'
                 }
                 className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-                           focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+             focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
                 required={mode === 'create'}
               />
               <button

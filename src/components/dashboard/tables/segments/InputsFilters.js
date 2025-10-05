@@ -1,3 +1,4 @@
+import usePermissions from '@/hooks/usePermissions';
 import SearchFilter from './inputSearch/searchFilter';
 
 export default function InputFilters({
@@ -6,11 +7,13 @@ export default function InputFilters({
   filters,
   handleFilterChange,
 }) {
+  const { canViewAll } = usePermissions();
+
   const allFilters = [
     {
       name: 'advisor',
       title: 'Asesor',
-      show: (rol === 'ADMIN' && view === 'customers') || view === 'delivered',
+      show: (canViewAll && view === 'customers') || view === 'delivered',
     },
     { name: 'role', title: 'Rol', show: view === 'advisors' },
     { name: 'name', title: 'Nombre', show: true },
@@ -27,7 +30,7 @@ export default function InputFilters({
 
   return (
     <tr>
-      {rol === 'ADMIN' && view === 'customers' && <th></th>}
+      {canViewAll && view === 'customers' && <th></th>}
 
       {allFilters
         .filter((f) => f.show)
