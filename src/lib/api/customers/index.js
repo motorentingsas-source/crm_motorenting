@@ -80,3 +80,19 @@ export async function importCustomers(file) {
   fd.append('file', file);
   return apiFetch('/customers/import', { method: 'POST', body: fd });
 }
+
+export async function exportDeliveredCustomers() {
+  const blob = await apiFetch('/customers/delivered/export', {
+    method: 'GET',
+    responseType: 'blob',
+  });
+
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `clientes_entregados_${Date.now()}.xlsx`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+}

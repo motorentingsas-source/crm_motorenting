@@ -24,6 +24,13 @@ async function apiFetch(path, opts = {}) {
 
   const res = await fetch(full, { ...opts, headers });
 
+  if (opts.responseType === 'blob') {
+    if (!res.ok) {
+      throw new Error(`Error ${res.status} al descargar archivo`);
+    }
+    return await res.blob();
+  }
+
   const text = await res.text();
   let data = null;
   try {

@@ -12,6 +12,7 @@ import {
   assignAdvisor,
   assignMultipleCustomers,
   importCustomers,
+  exportDeliveredCustomers,
 } from '../customers/index';
 
 export default function useCustomers() {
@@ -43,6 +44,7 @@ export default function useCustomers() {
     assignMultipleCustomers: (customerIds, selectedAdvisor) =>
       wrap(assignMultipleCustomers, { customerIds, selectedAdvisor }),
     importCustomers: (file) => wrap(importCustomers, file),
+    exportDeliveredCustomers: () => wrap(exportDeliveredCustomers),
     loading,
     error,
   };
