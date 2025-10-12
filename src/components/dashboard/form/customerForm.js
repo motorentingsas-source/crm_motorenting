@@ -68,7 +68,7 @@ export default function CustomerForm({
     }
   };
 
-  const shouldShowDeliveryState = Number(formData.stateId) === 18;
+  const shouldShowDeliveryState = Number(formData.stateId) === 19;
   const shouldShowPlateNumber =
     shouldShowDeliveryState && formData.deliveryState === 'ENTREGADO';
 
