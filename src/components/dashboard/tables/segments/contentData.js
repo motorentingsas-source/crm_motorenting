@@ -78,11 +78,11 @@ export default function ContentData({
               {view === 'customers' || view === 'delivered' ? (
                 info.phone ? (
                   <a
-                    href={`https://wa.me/${info.phone.replace(
+                    href={`https://wa.me/+57${info.phone.replace(
                       /\s+/g,
                       ''
                     )}?text=${encodeURIComponent(
-                      'Hola, te contacto desde MotoRenting ---'
+                      `Hola ${info.name}, te contacto desde MotoRenting ---`
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
