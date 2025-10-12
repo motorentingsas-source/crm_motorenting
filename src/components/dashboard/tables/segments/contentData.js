@@ -123,7 +123,9 @@ export default function ContentData({
                   handleDeleteClick(
                     info.id,
                     info.name,
-                    view === 'customers' ? 'cliente' : 'cliente entregado'
+                    view === 'customers' || view === 'delivered'
+                      ? 'cliente'
+                      : 'asesor'
                   )
                 }
                 setShowModalChangeAdvisor={(e) => setShowModalChangeAdvisor(e)}

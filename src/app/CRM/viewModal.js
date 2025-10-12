@@ -117,6 +117,15 @@ export default function ViewModal({ data, type, onClose }) {
                   {data.advisor?.name || 'Sin asignar'}
                 </p>
               </div>
+              <div>
+                <p className="font-semibold text-gray-700">Estado de Entrega</p>
+                <p className="text-gray-500">
+                  {{
+                    ENTREGADO: 'ENTREGADO',
+                    PENDIENTE_ENTREGA: 'PENDIENTE ENTREGA',
+                  }[data.deliveryState] || 'No disponible'}
+                </p>
+              </div>
               {isDelivered && (
                 <>
                   <div>
