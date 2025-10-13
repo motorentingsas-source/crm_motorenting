@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '@/context/authContext';
+import ImagesProcessor from '@/custom/ImagesProcessor';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -24,8 +26,15 @@ export default function Login() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg pb-9 mx-4 sm:mx-auto">
+    <div className="relative flex items-center justify-center min-h-screen overflow-hidden">
+      <div className="absolute inset-0 -z-10">
+        <ImagesProcessor
+          name="/images/BackgroundMotoRenting.png"
+          alt="Fondo login"
+        />
+      </div>
+
+      <div className="w-full max-w-md bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg pb-9 mx-4 sm:mx-auto">
         <div className="bg-black w-full rounded-t-2xl flex justify-center py-6">
           <img
             src="/images/logoMotoRenting.png"
@@ -48,7 +57,7 @@ export default function Login() {
               htmlFor="email"
               className="block text-xs text-gray-700 font-semibold py-2"
             >
-              Correo Electronico
+              Correo Electrónico
             </label>
             <input
               id="email"
