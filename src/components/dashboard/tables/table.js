@@ -13,6 +13,7 @@ import useUsers from '@/lib/api/hooks/useUsers';
 import AssignAdvisor from './segments/assignAdvisor';
 import ContentData from './segments/contentData';
 import usePermissions from '@/hooks/usePermissions';
+import { Roles } from '@/config/roles';
 
 const Table = ({ info = [], view, setSelected, rol, fetchData }) => {
   const [filtered, setFiltered] = useState(info);
@@ -27,7 +28,7 @@ const Table = ({ info = [], view, setSelected, rol, fetchData }) => {
   const [alert, setAlert] = useState({ type: '', message: '', url: '' });
   const [advisors, setAdvisors] = useState([]);
 
-  const { getUsers } = useUsers();
+  const { getUsers, deleteUser } = useUsers();
   const { assignMultipleCustomers, loading, assignAdvisor } = useCustomers();
   const { deleteCustomer, loading: deleting, error } = useCustomers();
 
@@ -129,15 +130,19 @@ const Table = ({ info = [], view, setSelected, rol, fetchData }) => {
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = async () => {
+  const confirmDelete = async (type, id) => {
     if (deleteTarget) {
       try {
-        await deleteCustomer(deleteTarget.id);
+        if (type === 'customers') {
+          await deleteCustomer(id);
+        } else {
+          await deleteUser(id);
+        }
         setShowDeleteModal(false);
         setDeleteTarget(null);
         setAlert({
           type: 'success',
-          message: `Cliente eliminado correctamente.`,
+          message: 'Se eliminó correctamente.',
         });
         await fetchData();
       } catch (err) {

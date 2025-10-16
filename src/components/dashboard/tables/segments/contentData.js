@@ -137,7 +137,9 @@ export default function ContentData({
                   setShow={setShowDeleteModal}
                   type={deleteTarget?.type}
                   name={deleteTarget?.name}
-                  onConfirm={confirmDelete}
+                  onConfirm={() => {
+                    confirmDelete(view, deleteTarget?.id);
+                  }}
                   loading={deleting}
                 />
               )}
