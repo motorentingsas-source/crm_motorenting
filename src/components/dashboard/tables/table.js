@@ -13,7 +13,6 @@ import useUsers from '@/lib/api/hooks/useUsers';
 import AssignAdvisor from './segments/assignAdvisor';
 import ContentData from './segments/contentData';
 import usePermissions from '@/hooks/usePermissions';
-import { Roles } from '@/config/roles';
 
 const Table = ({ info = [], view, setSelected, rol, fetchData }) => {
   const [filtered, setFiltered] = useState(info);
@@ -133,7 +132,7 @@ const Table = ({ info = [], view, setSelected, rol, fetchData }) => {
   const confirmDelete = async (type, id) => {
     if (deleteTarget) {
       try {
-        if (type === 'customers') {
+        if (type === 'customers' || type === 'delivered') {
           await deleteCustomer(id);
         } else {
           await deleteUser(id);
