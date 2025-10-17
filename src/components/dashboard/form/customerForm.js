@@ -31,10 +31,19 @@ export default function CustomerForm({
 
   const { canViewAll, canAssign } = usePermissions();
 
+  const fetchUsers = useCallback(async () => {
+    try {
+      const { data } = await getUsers();
+      setAdvisors(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }, [getUsers]);
+
   useEffect(() => {
     canViewAll && fetchUsers();
     fetchStates();
-  }, [formData, canViewAll, fetchUsers, fetchStates]);
+  }, [formData, canViewAll]);
 
   const handleChange = (e) => {
     let { name, value } = e.target;
@@ -49,15 +58,6 @@ export default function CustomerForm({
       ...(name === 'department' ? { city: '' } : {}),
     }));
   };
-
-  const fetchUsers = useCallback(async () => {
-    try {
-      const { data } = await getUsers();
-      setAdvisors(data);
-    } catch (err) {
-      console.error(err);
-    }
-  }, [getUsers]);
 
   const fetchStates = async () => {
     try {
