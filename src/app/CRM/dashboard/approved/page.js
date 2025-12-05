@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/context/authContext';
 import Table from '@/components/dashboard/tables/table';
-import usePreApproved from '@/lib/api/hooks/usePreApproved';
+import useApproved from '@/lib/api/hooks/useApproved';
 import ViewModal from '../../viewModal';
 import usePermissions from '@/hooks/usePermissions';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
@@ -13,17 +13,17 @@ export default function Approved() {
   const [approved, setApproved] = useState([]);
   const { usuario } = useAuth();
 
-  const { getPreApproveds, loading, error } = usePreApproved();
+  const { getApproveds, loading, error } = useApproved();
   const { canExportApproved } = usePermissions();
 
   const fetchData = useCallback(async () => {
     try {
-      const { data } = await getPreApproveds();
+      const { data } = await getApproveds();
       setApproved(data || []);
     } catch (err) {
       console.error(err);
     }
-  }, [getPreApproveds]);
+  }, [getApproveds]);
 
   useEffect(() => {
     fetchData();

@@ -13,6 +13,7 @@ import useUsers from '@/lib/api/hooks/useUsers';
 import AssignAdvisor from './segments/assignAdvisor';
 import ContentData from './segments/contentData';
 import usePermissions from '@/hooks/usePermissions';
+import { Roles } from '@/config/roles';
 
 const Table = ({
   info = [],
@@ -49,6 +50,7 @@ const Table = ({
     state: '',
     deliveryDate: '',
     plateNumber: '',
+    saleState: '',
   });
 
   useEffect(() => {
@@ -82,6 +84,10 @@ const Table = ({
             .includes(filters.plateNumber.toLowerCase())
         : true;
 
+      const saleStateMatch = filters.saleState
+        ? a.saleState?.toLowerCase().includes(filters.saleState.toLowerCase())
+        : true;
+
       if (view === 'customers' || view === 'delivered') {
         const advisorMatch = filters.advisor
           ? (a.advisor?.name?.toLowerCase() || 'sin asignar').includes(
@@ -102,7 +108,8 @@ const Table = ({
           advisorMatch &&
           stateMatch &&
           deliveryDateMatch &&
-          plateNumberMatch
+          plateNumberMatch &&
+          saleStateMatch
         );
       }
 
@@ -209,12 +216,11 @@ const Table = ({
   };
 
   const getCustomerLockStateSale = (view, customer) => {
-    const newData = {
-      ...customer,
-      saleState: { id: 1, name: 'PENDIENTE POR APROBAR', block: false },
-    };
-
-    if (newData?.saleState?.block && view === 'customers') {
+    if (
+      customer?.saleState === 'PENDIENTE_POR_APROBAR' &&
+      view === 'customers' &&
+      rol === Roles.ASESOR
+    ) {
       return true;
     }
 

@@ -11,6 +11,7 @@ import AddComment from '../comments/addComment';
 import BtnReturn from '../buttons/return';
 import BtnSave from '../buttons/save';
 import { ORIGIN_LIST } from '@/lib/api/listData/origin';
+import { formatEnumText } from '@/lib/api/utils/utils';
 
 export default function CustomerForm({
   formData,
@@ -170,9 +171,9 @@ export default function CustomerForm({
               className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm focus:outline-none transition focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
             >
               <option value="">Seleccione una Procedencia</option>
-              {ORIGIN_LIST.map((origin) => (
+              {Object.values(ORIGIN_LIST).map((origin) => (
                 <option key={origin} value={origin}>
-                  {origin}
+                  {formatEnumText(origin, 'uppercase')}
                 </option>
               ))}
             </select>
@@ -208,7 +209,9 @@ export default function CustomerForm({
                 required
               >
                 <option value="">Seleccione un estado</option>
-                <option value="ENTREGADO">Entregado</option>
+                {formData.saleState === 'APROBADO' && (
+                  <option value="ENTREGADO">Entregado</option>
+                )}
                 <option value="PENDIENTE_ENTREGA">Pendiente de Entrega</option>
               </select>
             </div>

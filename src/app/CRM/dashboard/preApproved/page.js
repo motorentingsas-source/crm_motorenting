@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/context/authContext';
 import Table from '@/components/dashboard/tables/table';
-import usePreApproved from '@/lib/api/hooks/usePreApproved';
+import useApproved from '@/lib/api/hooks/useApproved';
 import ViewModal from '../../viewModal';
 import ContentViewModal from '@/components/dashboard/preApproved/contentViewModal';
 
@@ -13,7 +13,7 @@ export default function Pre_approved() {
   const [preApproved, setPreApproved] = useState([]);
   const { usuario } = useAuth();
 
-  const { getPreApproveds, loading, error } = usePreApproved();
+  const { getPreApproveds, loading, error } = useApproved();
 
   const fetchData = useCallback(async () => {
     try {

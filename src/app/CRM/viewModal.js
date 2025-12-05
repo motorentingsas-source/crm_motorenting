@@ -2,6 +2,7 @@
 
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import CommentsHistory from '@/components/dashboard/comments/CommentsHistory';
+import { formatEnumText } from '@/lib/api/utils/utils';
 
 export default function ViewModal({ data, type, onClose }) {
   if (!data) return null;
@@ -70,6 +71,12 @@ export default function ViewModal({ data, type, onClose }) {
                 {formatDate(data.birthdate) || 'No disponible'}
               </p>
             </div>
+            <div>
+              <p className="font-semibold text-gray-700">Procedencia</p>
+              <p className="text-gray-500">
+                {formatEnumText(data.origin, 'uppercase') || 'No disponible'}
+              </p>
+            </div>
           </div>
 
           <div className="space-y-3">
@@ -108,6 +115,13 @@ export default function ViewModal({ data, type, onClose }) {
                 {formatDate(data.createdAt) || 'No disponible'}
               </p>
             </div>
+
+            <div>
+              <p className="font-semibold text-gray-700">Fecha de Venta</p>
+              <p className="text-gray-500">
+                {formatDate(data.saleDate) || 'No disponible'}
+              </p>
+            </div>
           </div>
           {type !== 'advisor' && (
             <div className="space-y-3">
@@ -115,6 +129,12 @@ export default function ViewModal({ data, type, onClose }) {
                 <p className="font-semibold text-gray-700">Asesor asignado</p>
                 <p className="text-gray-500">
                   {data.advisor?.name || 'Sin asignar'}
+                </p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-700">Estado de Venta</p>
+                <p className="text-gray-500">
+                  {formatEnumText(data.saleState, 'uppercase') || 'NA'}
                 </p>
               </div>
               <div>

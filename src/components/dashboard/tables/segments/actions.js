@@ -48,12 +48,15 @@ export default function Actions({
 
   const ActionLink = ({ href, disabled, color, icon: Icon, tooltip }) => (
     <div className="relative group flex items-center">
-      <Link
-        href={disabled ? '#' : href}
-        className={`${disabled ? 'text-gray-400 cursor-not-allowed' : color}`}
-      >
-        <Icon className="w-5 h-5" />
-      </Link>
+      {disabled ? (
+        <button disabled className="text-gray-400 cursor-not-allowed">
+          <Icon className="w-5 h-5" />
+        </button>
+      ) : (
+        <Link href={href} className={`${color}`}>
+          <Icon className="w-5 h-5" />
+        </Link>
+      )}
 
       <span className="absolute -top-10 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition bg-black text-white text-xs rounded px-2 py-1">
         {tooltip}

@@ -3,6 +3,8 @@ import Actions from './actions';
 import ConfirmDeleteModal from './confirmDeleteModal';
 import { formatDateTime } from '@/lib/api/utils/formatDateTime';
 import usePermissions from '@/hooks/usePermissions';
+import { formatEnumText } from '@/lib/api/utils/utils';
+import { Roles } from '@/config/roles';
 
 export default function ContentData({
   paginatedData,
@@ -130,7 +132,8 @@ export default function ContentData({
 
             {(view === 'customers' || view === 'preApproved') && (
               <td className="px-4 py-3">
-                {info.saleState?.name || 'PENDIENTE POR APROBAR'}
+                {formatEnumText(info.saleState, 'uppercase') ||
+                  'PENDIENTE POR APROBAR'}
               </td>
             )}
 

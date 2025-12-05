@@ -2,14 +2,18 @@ import apiFetch from '../auth/client';
 import { toFullISO } from '../utils/utils';
 
 export async function getPreApproveds() {
+  return apiFetch('/customers/sale');
+}
+
+export async function getApproveds() {
   return apiFetch('/customers');
 }
 
-export async function getPreApprovedById(id) {
+export async function getApprovedById(id) {
   return apiFetch(`/customers/${id}`);
 }
 
-export async function createPreApproved(dto) {
+export async function createApproved(dto) {
   const body = {
     ...dto,
     birthdate: dto.birthdate ? toFullISO(dto.birthdate) : undefined,
@@ -19,7 +23,7 @@ export async function createPreApproved(dto) {
   return apiFetch('/customers', { method: 'POST', body: JSON.stringify(body) });
 }
 
-export async function updatePreApproved(id, dto) {
+export async function updateApproved(id, dto) {
   const {
     id: _id,
     createdAt,
@@ -44,7 +48,7 @@ export async function updatePreApproved(id, dto) {
   });
 }
 
-export async function deletePreApproved(id) {
+export async function deleteApproved(id) {
   return apiFetch(`/customers/${id}`, { method: 'DELETE' });
 }
 

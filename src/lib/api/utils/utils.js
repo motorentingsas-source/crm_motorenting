@@ -48,3 +48,25 @@ export function pesosToNumber(value) {
   const clean = str.replace(/[^\d]/g, '');
   return parseInt(clean || '0', 10);
 }
+
+export function formatEnumText(value, mode = 'capitalize') {
+  if (!value) return '';
+
+  const words = value.split('_');
+
+  switch (mode) {
+    case 'uppercase':
+      return words.join(' ').toUpperCase();
+
+    case 'lowercase':
+      return words.join(' ').toLowerCase();
+
+    case 'capitalize':
+    default:
+      return words
+        .map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
+        .join(' ');
+  }
+}

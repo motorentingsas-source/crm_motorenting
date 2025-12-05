@@ -2,7 +2,7 @@ export const ORIGIN_LIST = [
   'CRM',
   'TIKTOK',
   'SALA',
-  'REDES SOCIALES',
+  'REDES_PROPIAS',
   'REFERIDO',
-  'PLAN MOTORENTING',
+  'PLAN_MOTORENTING',
 ];

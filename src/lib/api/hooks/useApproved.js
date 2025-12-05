@@ -2,14 +2,15 @@
 import { useCallback, useState } from 'react';
 import {
   getPreApproveds,
-  getPreApprovedById,
-  createPreApproved,
-  updatePreApproved,
-  deletePreApproved,
+  getApproveds,
+  getApprovedById,
+  createApproved,
+  updateApproved,
+  deleteApproved,
   addComment,
-} from '../preApproved/index';
+} from '../approved/index';
 
-export default function usePreApproved() {
+export default function useApproved() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -27,20 +28,21 @@ export default function usePreApproved() {
   }, []);
 
   const getPreApprovedsFn = useCallback(() => wrap(getPreApproveds), [wrap]);
-  const getPreApprovedByIdFn = useCallback(
-    (id) => wrap(getPreApprovedById, id),
+  const getApprovedsFn = useCallback(() => wrap(getApproveds), [wrap]);
+  const getApprovedByIdFn = useCallback(
+    (id) => wrap(getApprovedById, id),
     [wrap]
   );
-  const createPreApprovedFn = useCallback(
-    (dto) => wrap(createPreApproved, dto),
+  const createApprovedFn = useCallback(
+    (dto) => wrap(createApproved, dto),
     [wrap]
   );
-  const updatePreApprovedFn = useCallback(
-    (id, dto) => wrap(updatePreApproved, id, dto),
+  const updateApprovedFn = useCallback(
+    (id, dto) => wrap(updateApproved, id, dto),
     [wrap]
   );
-  const deletePreApprovedFn = useCallback(
-    (id) => wrap(deletePreApproved, id),
+  const deleteApprovedFn = useCallback(
+    (id) => wrap(deleteApproved, id),
     [wrap]
   );
   const addCommentFn = useCallback(
@@ -49,10 +51,11 @@ export default function usePreApproved() {
   );
   return {
     getPreApproveds: getPreApprovedsFn,
-    getPreApprovedById: getPreApprovedByIdFn,
-    createPreApproved: createPreApprovedFn,
-    updatePreApproved: updatePreApprovedFn,
-    deletePreApproved: deletePreApprovedFn,
+    getApproveds: getApprovedsFn,
+    getApprovedById: getApprovedByIdFn,
+    createApproved: createApprovedFn,
+    updateApproved: updateApprovedFn,
+    deleteApproved: deleteApprovedFn,
     addComment: addCommentFn,
     loading,
     error,
