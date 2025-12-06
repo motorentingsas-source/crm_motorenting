@@ -6,7 +6,10 @@ import useCustomers from '@/lib/api/hooks/useCustomers';
 import CustomerForm from '@/components/dashboard/form/customerForm';
 import { Roles } from '@/config/roles';
 
-export default function EditCustomerComponent({ title = '', href = '' }) {
+export default function EditCustomerComponent({
+  title = '',
+  href = 'customers',
+}) {
   const router = useRouter();
   const params = useParams();
   const { id } = params;
@@ -31,9 +34,9 @@ export default function EditCustomerComponent({ title = '', href = '' }) {
           setAlert({
             type: 'warning',
             message: 'Cliente no encontrado.',
-            url: '/CRM/dashboard/customers',
+            url: `/CRM/dashboard/${href}`,
           });
-          router.push('/CRM/dashboard/customers');
+          router.push(`/CRM/dashboard/${href}`);
         });
     }
   }, [id, router]);
@@ -78,7 +81,7 @@ export default function EditCustomerComponent({ title = '', href = '' }) {
       setAlert({
         type: 'success',
         message: 'Cliente actualizado correctamente.',
-        url: '/CRM/dashboard/customers',
+        url: `/CRM/dashboard/${href}`,
       });
     } catch (err) {
       setAlert({

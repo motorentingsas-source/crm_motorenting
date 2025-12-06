@@ -1,7 +1,7 @@
 import { formatPesosRealtime, pesosToNumber } from '@/lib/api/utils/utils';
 import React from 'react';
 
-export default function Purchase({ purchase, calcTotal, errors, setPurchase }) {
+export default function Purchase({ purchase, errors, setPurchase }) {
   return (
     <section>
       <h2 className="text-lg font-semibold mb-2">Datos de la compra</h2>
@@ -50,16 +50,12 @@ export default function Purchase({ purchase, calcTotal, errors, setPurchase }) {
         <input
           placeholder="Valor comercial"
           value={formatPesosRealtime(purchase.commercialValue)}
-          onChange={(e) => {
-            const formatted = e.target.value;
-            const numeric = formatted;
-
+          onChange={(e) =>
             setPurchase({
               ...purchase,
-              commercialValue: pesosToNumber(formatted),
-              total: calcTotal(numeric, pesosToNumber(purchase.processValue)),
-            });
-          }}
+              commercialValue: pesosToNumber(e.target.value),
+            })
+          }
           className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
             errors.commercialValue ? 'border-red-500' : 'border-gray-200'
           }`}
@@ -68,19 +64,12 @@ export default function Purchase({ purchase, calcTotal, errors, setPurchase }) {
         <input
           placeholder="Valor trámites"
           value={formatPesosRealtime(purchase.processValue)}
-          onChange={(e) => {
-            const formatted = e.target.value;
-            const numeric = formatted;
-
+          onChange={(e) =>
             setPurchase({
               ...purchase,
-              processValue: pesosToNumber(formatted),
-              total: calcTotal(
-                pesosToNumber(purchase.commercialValue),
-                numeric
-              ),
-            });
-          }}
+              processValue: pesosToNumber(e.target.value),
+            })
+          }
           className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
             errors.processValue ? 'border-red-500' : 'border-gray-200'
           }`}

@@ -1,17 +1,29 @@
 'use client';
 import React, { useState } from 'react';
+import { addComment } from '@/lib/api/customers';
+import AlertModal from '../../modals/alertModal';
 
-export default function Decline({ onSubmit }) {
+export default function Decline({ data, onClose }) {
   const [observation, setObservation] = useState('');
   const [touched, setTouched] = useState(false);
+  const [alert, setAlert] = useState({ type: '', message: '', url: '' });
 
-  const handleSubmit = () => {
+  const handleAddComment = async () => {
     setTouched(true);
     if (!observation.trim()) return;
-
-    onSubmit({
-      observation,
-    });
+    try {
+      await addComment(Number(data.id), observation.trim(), 'RECHAZADO');
+      setObservation('');
+      setAlert({
+        type: 'success',
+        message: 'Comentario agregado correctamente.',
+      });
+    } catch (err) {
+      setAlert({
+        type: 'error',
+        message: err.message || 'Error al agregar comentario',
+      });
+    }
   };
 
   return (
@@ -40,11 +52,18 @@ export default function Decline({ onSubmit }) {
       )}
 
       <button
-        onClick={handleSubmit}
-        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+        onClick={handleAddComment}
+        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 cursor-pointer"
       >
         Rechazar venta
       </button>
+
+      <AlertModal
+        type={alert.type}
+        message={alert.message}
+        onClose={() => setAlert({ type: '', message: '' }, onClose())}
+        url={alert.url}
+      />
     </div>
   );
 }

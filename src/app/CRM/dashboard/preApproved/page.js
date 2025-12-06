@@ -28,6 +28,11 @@ export default function Pre_approved() {
     fetchData();
   }, [fetchData]);
 
+  const handleSelectedState = () => {
+    fetchData();
+    setSelectedState(null);
+  };
+
   return (
     <div className="w-full p-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -65,7 +70,7 @@ export default function Pre_approved() {
         {selectedState && (
           <ContentViewModal
             data={selectedState}
-            onClose={() => setSelectedState(null)}
+            onClose={() => handleSelectedState()}
           />
         )}
       </div>

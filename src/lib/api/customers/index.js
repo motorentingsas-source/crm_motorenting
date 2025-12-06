@@ -52,10 +52,10 @@ export async function deleteCustomer(id) {
   return apiFetch(`/customers/${id}`, { method: 'DELETE' });
 }
 
-export async function addComment(customerId, description) {
+export async function addComment(customerId, description, saleState) {
   return apiFetch(`/customers/${customerId}/comments`, {
     method: 'POST',
-    body: JSON.stringify({ description }),
+    body: JSON.stringify({ description, saleState }),
   });
 }
 

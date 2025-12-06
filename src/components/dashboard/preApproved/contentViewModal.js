@@ -21,8 +21,12 @@ export default function ContentViewModal({ data, type, onClose }) {
         </button>
 
         <div className="p-6 max-h-[85vh] overflow-y-auto">
-          {data.action === 'approve' && <Approve data={data} />}
-          {data.action === 'decline' && <Decline data={data} />}
+          {data.action === 'approve' && (
+            <Approve data={data} onClose={onClose} />
+          )}
+          {data.action === 'decline' && (
+            <Decline data={data} onClose={onClose} />
+          )}
         </div>
       </div>
     </div>

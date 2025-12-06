@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Holders from './approve/holders';
 import Purchase from './approve/purchase';
 import CashReceipts from './approve/cashReceipts';
@@ -8,7 +8,7 @@ import Payments from './approve/payments';
 import Distributor from './approve/distributor';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 
-export default function Approve({ onSubmit }) {
+export default function Approve({ data }) {
   const [holders, setHolders] = useState([]);
   const [payments, setPayments] = useState([]);
   const [receipts, setReceipts] = useState([]);
@@ -18,19 +18,24 @@ export default function Approve({ onSubmit }) {
     reference: '',
     colorMain: '',
     colorOptional: '',
-    commercialValue: '',
-    processValue: '',
-    total: '',
+    commercialValue: 0,
+    processValue: 0,
+    total: 0,
   });
 
   const [distributor, setDistributor] = useState('');
   const [errors, setErrors] = useState({});
 
-  const calcTotal = (commercialValue, processValue) => {
-    const cv = Number(commercialValue) || 0;
-    const pv = Number(processValue) || 0;
-    return cv + pv;
-  };
+  useEffect(() => {
+    const total =
+      Number(purchase.commercialValue || 0) +
+      Number(purchase.processValue || 0);
+
+    setPurchase((prev) => ({
+      ...prev,
+      total,
+    }));
+  }, [purchase.commercialValue, purchase.processValue]);
 
   const validatePurchase = () => {
     const e = {};
@@ -50,13 +55,16 @@ export default function Approve({ onSubmit }) {
       return;
     }
 
-    onSubmit({
+    const dataApproved = {
+      saleState: 'APROBADO',
+      distributor,
       holders,
       purchase,
       payments,
       receipts,
-      distributor,
-    });
+    };
+
+    console.log(dataApproved);
   };
 
   const addHolder = () =>
@@ -89,12 +97,8 @@ export default function Approve({ onSubmit }) {
         holders={holders}
         setHolders={setHolders}
       />
-      <Purchase
-        purchase={purchase}
-        calcTotal={calcTotal}
-        errors={errors}
-        setPurchase={setPurchase}
-      />
+
+      <Purchase purchase={purchase} errors={errors} setPurchase={setPurchase} />
 
       <Payments
         addPayment={addPayment}
@@ -112,7 +116,7 @@ export default function Approve({ onSubmit }) {
 
       <section>
         {errors.processValue && (
-          <p className="text-sm text-red-600">Hay campos es obligatorio.</p>
+          <p className="text-sm text-red-600">Hay campos obligatorios.</p>
         )}
       </section>
 
