@@ -1,12 +1,21 @@
-import { formatPesosRealtime, pesosToNumber } from '@/lib/api/utils/utils';
+import {
+  normalizeDateForInput,
+  formatPesosRealtime,
+  pesosToNumber,
+} from '@/lib/api/utils/utils';
 import { PlusIcon } from '@heroicons/react/24/outline';
 
-export default function CashReceipts({ addReceipt, receipts, setReceipts }) {
+export default function CashReceipts({
+  addReceipt,
+  errors,
+  receipts,
+  setReceipts,
+}) {
   return (
     <section>
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-lg font-semibold">Recibos de caja</h2>
-        <button
+        <p
           onClick={addReceipt}
           className="
             flex items-center gap-2
@@ -22,7 +31,7 @@ export default function CashReceipts({ addReceipt, receipts, setReceipts }) {
         >
           <PlusIcon className="w-5 h-5" />
           Agregar recibo
-        </button>
+        </p>
       </div>
 
       {receipts.map((r, i) => (
@@ -31,23 +40,31 @@ export default function CashReceipts({ addReceipt, receipts, setReceipts }) {
           className="border border-gray-200 p-4 rounded mb-4 grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           <input
+            value={r.receiptNumber}
             placeholder="Número de recibo"
             onChange={(e) => {
               const copy = [...receipts];
               copy[i].receiptNumber = e.target.value;
               setReceipts(copy);
             }}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm"
+            className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
+              errors[`receipt-${i}-receiptNumber`]
+                ? 'border-red-500'
+                : 'border-gray-200'
+            }`}
           />
 
           <input
+            value={normalizeDateForInput(r.date)}
             type="date"
             onChange={(e) => {
               const copy = [...receipts];
               copy[i].date = e.target.value;
               setReceipts(copy);
             }}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm"
+            className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
+              errors[`receipt-${i}-date`] ? 'border-red-500' : 'border-gray-200'
+            }`}
           />
 
           <input
@@ -58,7 +75,11 @@ export default function CashReceipts({ addReceipt, receipts, setReceipts }) {
               copy[i].amount = pesosToNumber(e.target.value);
               setReceipts(copy);
             }}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm"
+            className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
+              errors[`receipt-${i}-amount`]
+                ? 'border-red-500'
+                : 'border-gray-200'
+            }`}
           />
         </div>
       ))}

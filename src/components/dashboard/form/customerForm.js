@@ -12,6 +12,7 @@ import BtnReturn from '../buttons/return';
 import BtnSave from '../buttons/save';
 import { ORIGIN_LIST } from '@/lib/api/listData/origin';
 import { formatEnumText } from '@/lib/api/utils/utils';
+import ContentViewModal from '../preApproved/contentViewModal';
 
 export default function CustomerForm({
   formData,
@@ -29,10 +30,11 @@ export default function CustomerForm({
 }) {
   const [advisors, setAdvisors] = useState([]);
   const [states, setStates] = useState([]);
+  const [editApproved, setEditApproved] = useState(false);
 
   const { getUsers } = useUsers();
   const { getStates } = useStates();
-  const { canViewAll, canAssign } = usePermissions();
+  const { canViewAll, canAssign, canUpdateApproved } = usePermissions();
 
   const fetchUsers = useCallback(async () => {
     try {
@@ -209,7 +211,7 @@ export default function CustomerForm({
                 required
               >
                 <option value="">Seleccione un estado</option>
-                {formData.saleState === 'APROBADO' && (
+                {formData.isReadyForProcess && (
                   <option value="ENTREGADO">Entregado</option>
                 )}
                 <option value="PENDIENTE_ENTREGA">Pendiente de Entrega</option>
@@ -250,6 +252,22 @@ export default function CustomerForm({
           </>
         )}
       </div>
+
+      {canUpdateApproved && view === 'approved' && (
+        <p
+          onClick={() => setEditApproved(true)}
+          className="text-orange-400 hover:text-orange-600 underline text-sm font-medium transition-colors cursor-pointer"
+        >
+          Actualizar más campos
+        </p>
+      )}
+
+      {editApproved && (
+        <ContentViewModal
+          data={{ ...formData, action: 'approve' }}
+          onClose={() => setEditApproved(false)}
+        />
+      )}
 
       {mode === 'edit' && (
         <>

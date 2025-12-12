@@ -28,6 +28,7 @@ export default function InputFilters({
     },
     { name: 'role', title: 'Rol', show: view === 'advisors' },
     { name: 'name', title: 'Nombre', show: true },
+    { name: 'document', title: 'Documento', show: true },
     {
       name: 'deliveryDate',
       title: 'Fecha de Entrega',
@@ -36,6 +37,7 @@ export default function InputFilters({
     { name: 'plateNumber', title: 'Placa', show: view === 'delivered' },
     { name: 'email', title: 'Correo', show: true },
     { name: 'phone', title: 'Teléfono', show: true },
+    { name: 'city', title: 'Ciudad', show: true },
     {
       name: 'state',
       title: 'Estado',

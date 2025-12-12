@@ -4,7 +4,6 @@ import ConfirmDeleteModal from './confirmDeleteModal';
 import { formatDateTime } from '@/lib/api/utils/formatDateTime';
 import usePermissions from '@/hooks/usePermissions';
 import { formatEnumText } from '@/lib/api/utils/utils';
-import { Roles } from '@/config/roles';
 
 export default function ContentData({
   paginatedData,
@@ -23,6 +22,7 @@ export default function ContentData({
   confirmDelete,
   deleting,
   setShowModalChangeAdvisor,
+  handlePrintOrder,
 }) {
   const { canAssign, canViewAll } = usePermissions();
 
@@ -80,6 +80,7 @@ export default function ContentData({
             )}
 
             <td className="px-4 py-3">{info.name}</td>
+            <td className="px-4 py-3">{info.document || '---'}</td>
 
             {view === 'delivered' && (
               <>
@@ -126,6 +127,8 @@ export default function ContentData({
               )}
             </td>
 
+            <td className="px-4 py-3">{info.city || '---'}</td>
+
             {view === 'customers' && (
               <td className="px-4 py-3">{info.state?.name}</td>
             )}
@@ -156,6 +159,7 @@ export default function ContentData({
                   )
                 }
                 setShowModalChangeAdvisor={(e) => setShowModalChangeAdvisor(e)}
+                handlePrintOrder={handlePrintOrder}
               />
 
               {showDeleteModal && (

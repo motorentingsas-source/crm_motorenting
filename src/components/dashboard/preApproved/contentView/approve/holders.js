@@ -3,12 +3,12 @@ import { formatEnumText } from '@/lib/api/utils/utils';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import React from 'react';
 
-export default function Holders({ addHolder, holders, setHolders }) {
+export default function Holders({ addHolder, errors, holders, setHolders }) {
   return (
     <section>
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-lg font-semibold">Datos de titulares</h2>
-        <button
+        <p
           onClick={addHolder}
           className="
             flex items-center gap-2
@@ -24,7 +24,7 @@ export default function Holders({ addHolder, holders, setHolders }) {
         >
           <PlusIcon className="w-5 h-5" />
           Agregar titular
-        </button>
+        </p>
       </div>
 
       {holders.map((holder, i) => (
@@ -34,71 +34,100 @@ export default function Holders({ addHolder, holders, setHolders }) {
         >
           <input
             placeholder="Nombres completos"
+            value={holder.fullName}
             onChange={(e) => {
               const copy = [...holders];
               copy[i].fullName = e.target.value;
               setHolders(copy);
             }}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm"
+            className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
+              errors[`holder-${i}-fullName`]
+                ? 'border-red-500'
+                : 'border-gray-200'
+            }`}
           />
 
           <input
             placeholder="Cédula"
+            value={holder.document}
             onChange={(e) => {
               const copy = [...holders];
               copy[i].document = e.target.value;
               setHolders(copy);
             }}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm"
+            className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
+              errors[`holder-${i}-document`]
+                ? 'border-red-500'
+                : 'border-gray-200'
+            }`}
           />
 
           <input
             placeholder="Correo"
+            value={holder.email}
             onChange={(e) => {
               const copy = [...holders];
               copy[i].email = e.target.value;
               setHolders(copy);
             }}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm"
+            className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
+              errors[`holder-${i}-email`] ? 'border-red-500' : 'border-gray-200'
+            }`}
           />
 
           <input
             placeholder="Teléfono"
+            value={holder.phone}
             onChange={(e) => {
               const copy = [...holders];
               copy[i].phone = e.target.value;
               setHolders(copy);
             }}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm"
+            className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
+              errors[`holder-${i}-phone`] ? 'border-red-500' : 'border-gray-200'
+            }`}
           />
 
           <input
             placeholder="Dirección"
+            value={holder.address}
             onChange={(e) => {
               const copy = [...holders];
               copy[i].address = e.target.value;
               setHolders(copy);
             }}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm"
+            className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
+              errors[`holder-${i}-address`]
+                ? 'border-red-500'
+                : 'border-gray-200'
+            }`}
           />
 
           <input
             placeholder="Ciudad"
+            value={holder.city}
             onChange={(e) => {
               const copy = [...holders];
               copy[i].city = e.target.value;
               setHolders(copy);
             }}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm"
+            className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
+              errors[`holder-${i}-city`] ? 'border-red-500' : 'border-gray-200'
+            }`}
           />
 
           <select
+            value={holder.financialEntity}
             onChange={(e) => {
               const copy = [...holders];
               copy[i].financialEntity = e.target.value;
               setHolders(copy);
             }}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm"
+            className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
+              errors[`holder-${i}-financialEntity`]
+                ? 'border-red-500'
+                : 'border-gray-200'
+            }`}
           >
             <option value="">Financiera</option>
             {FINANCIALS_LIST.map((f) => (

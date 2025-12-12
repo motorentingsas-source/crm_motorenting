@@ -32,6 +32,15 @@ export async function updateCustomer(id, dto) {
     advisor,
     comments,
     state,
+    invoices,
+    registration,
+    payments,
+    receipts,
+    holders,
+    purchase,
+    outstandingBalance,
+    creditBalance,
+    isReadyForProcess,
     ...cleanDto
   } = dto;
 

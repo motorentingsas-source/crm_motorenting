@@ -4,7 +4,9 @@ import {
   TrashIcon,
   PencilIcon,
   ArrowPathIcon,
+  PrinterIcon,
 } from '@heroicons/react/24/outline';
+
 import Link from 'next/link';
 
 export default function Actions({
@@ -16,6 +18,7 @@ export default function Actions({
   setSelectedState,
   handleDelete,
   setShowModalChangeAdvisor,
+  handlePrintOrder,
 }) {
   const {
     canAssign,
@@ -26,6 +29,7 @@ export default function Actions({
     canPreApproved,
     canEditApproved,
     canDeleteApproved,
+    canPrinterApproved,
   } = usePermissions();
 
   const ActionButton = ({ onClick, disabled, color, icon: Icon, tooltip }) => (
@@ -83,6 +87,16 @@ export default function Actions({
         icon={EyeIcon}
         tooltip="Ver detalles"
       />
+
+      {view === 'approved' && canPrinterApproved && (
+        <ActionButton
+          onClick={() => handlePrintOrder(info.id, info.name)}
+          disabled={isLocked || isLockedSale}
+          color="text-purple-500 hover:text-purple-700"
+          icon={PrinterIcon}
+          tooltip="Orden de entrega"
+        />
+      )}
 
       {(view === 'customers' ||
         (view === 'advisors' && canEdit) ||

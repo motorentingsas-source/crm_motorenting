@@ -1,7 +1,11 @@
 import React from 'react';
 import { formatPesosRealtime } from '@/lib/api/utils/utils';
 
-export default function Purchase({ purchase, outstandingBalance }) {
+export default function Purchase({
+  purchase,
+  outstandingBalance,
+  creditBalance,
+}) {
   return (
     <details className="group border rounded-xl p-4 border-gray-200">
       <summary className="cursor-pointer font-semibold text-gray-800 text-lg flex justify-between items-center">
@@ -48,6 +52,10 @@ export default function Purchase({ purchase, outstandingBalance }) {
             <p className="font-bold">
               {formatPesosRealtime(outstandingBalance)}
             </p>
+          </div>
+          <div>
+            <p className="font-semibold">Saldo a Favor</p>
+            <p className="font-bold">{formatPesosRealtime(creditBalance)}</p>
           </div>
         </div>
       ) : (

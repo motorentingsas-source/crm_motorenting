@@ -82,10 +82,12 @@ export default function ViewModal({ data, type, onClose }) {
                 <p className="font-semibold">Fecha de Nacimiento</p>
                 <p>{formatDate(data.birthdate)}</p>
               </div>
-              <div>
-                <p className="font-semibold">Procedencia</p>
-                <p>{formatEnumText(data.origin, 'uppercase')}</p>
-              </div>
+              {type !== 'advisor' && (
+                <div>
+                  <p className="font-semibold">Procedencia</p>
+                  <p>{formatEnumText(data.origin, 'uppercase')}</p>
+                </div>
+              )}
               <div>
                 <p className="font-semibold">Documento</p>
                 <p>{data.document}</p>
@@ -104,15 +106,22 @@ export default function ViewModal({ data, type, onClose }) {
                   {data?.state?.name || data?.status}
                 </span>
               </div>
-
+              {type === 'advisor' && (
+                <div>
+                  <p className="font-semibold">Rol</p>
+                  <p>{data.role}</p>
+                </div>
+              )}
               <div>
                 <p className="font-semibold">Registro</p>
                 <p>{formatDate(data.createdAt)}</p>
               </div>
-              <div>
-                <p className="font-semibold">Fecha de Venta</p>
-                <p>{formatDate(data.saleDate)}</p>
-              </div>
+              {type !== 'advisor' && (
+                <div>
+                  <p className="font-semibold">Fecha de Venta</p>
+                  <p>{formatDate(data.saleDate)}</p>
+                </div>
+              )}
             </div>
           </details>
 
@@ -165,6 +174,7 @@ export default function ViewModal({ data, type, onClose }) {
             <Purchase
               purchase={data?.purchase}
               outstandingBalance={data?.outstandingBalance}
+              creditBalance={data?.creditBalance}
             />
           )}
 

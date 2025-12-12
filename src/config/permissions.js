@@ -13,6 +13,8 @@ export const ROLE_PERMISSIONS = {
     canExportApproved: true,
     canImport: true,
     canAssign: true,
+    canPrinterApproved: true,
+    canUpdateApproved: true,
   },
   ADMIN: {
     canDoEverything: false,
@@ -28,6 +30,8 @@ export const ROLE_PERMISSIONS = {
     canExportApproved: false,
     canImport: true,
     canAssign: true,
+    canPrinterApproved: true,
+    canUpdateApproved: false,
   },
   COORDINADOR: {
     canDoEverything: false,
@@ -43,6 +47,8 @@ export const ROLE_PERMISSIONS = {
     canExportApproved: false,
     canImport: true,
     canAssign: true,
+    canPrinterApproved: true,
+    canUpdateApproved: false,
   },
   ASESOR: {
     canDoEverything: false,
@@ -58,10 +64,12 @@ export const ROLE_PERMISSIONS = {
     canExportApproved: false,
     canImport: false,
     canAssign: false,
+    canPrinterApproved: false,
+    canUpdateApproved: false,
   },
   AUXILIAR: {
     canDoEverything: false,
-    canViewAll: false,
+    canViewAll: true,
     canCreate: true,
     canEdit: true,
     canEditPreApproved: false,
@@ -73,5 +81,7 @@ export const ROLE_PERMISSIONS = {
     canExportApproved: false,
     canImport: false,
     canAssign: false,
+    canPrinterApproved: true,
+    canUpdateApproved: false,
   },
 };

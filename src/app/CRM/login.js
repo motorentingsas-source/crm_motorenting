@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '@/context/authContext';
 import ImagesProcessor from '@/custom/ImagesProcessor';
+import { Roles } from '@/config/roles';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -18,8 +18,12 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      await login(email, password);
-      router.push('/CRM/dashboard/customers');
+      const loggedUser = await login(email, password);
+      if (loggedUser && loggedUser.role === Roles.AUXILIAR) {
+        router.push('/CRM/dashboard/approved');
+      } else {
+        router.push('/CRM/dashboard/customers');
+      }
     } catch (err) {
       setError(err.message || 'Error en login');
     }

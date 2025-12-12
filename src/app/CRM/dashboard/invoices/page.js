@@ -96,8 +96,8 @@ export default function Invoices() {
     } catch (err) {
       console.error(err);
       setAlert({
-        type: 'error',
-        message: 'Error al registrar la factura',
+        type: 'warning',
+        message: `${err || 'Error al registrar la factura'} `,
       });
     }
   };

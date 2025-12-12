@@ -5,6 +5,7 @@ import {
   getApproveds,
   createApproved,
   exportAllCustomersApproved,
+  downloadDeliveryOrder,
 } from '../approved/index';
 
 export default function useApproved() {
@@ -34,12 +35,18 @@ export default function useApproved() {
     () => wrap(exportAllCustomersApproved),
     [wrap]
   );
+  const downloadDeliveryOrderFn = useCallback(
+    (customerId, nameCustomer) =>
+      wrap(downloadDeliveryOrder, customerId, nameCustomer),
+    [wrap]
+  );
 
   return {
     getPreApproveds: getPreApprovedsFn,
     getApproveds: getApprovedsFn,
     createApproved: createApprovedFn,
     exportAllCustomersApproved: exportAllCustomersApprovedFn,
+    downloadDeliveryOrder: downloadDeliveryOrderFn,
     loading,
     error,
   };

@@ -88,8 +88,8 @@ export default function Registrations() {
     } catch (err) {
       console.error(err);
       setAlert({
-        type: 'error',
-        message: 'Error al registrar la matrícula',
+        type: 'warning',
+        message: `${err || 'Error al registrar la matrícula'} `,
       });
     }
   };

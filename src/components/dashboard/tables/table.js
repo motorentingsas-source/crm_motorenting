@@ -14,6 +14,7 @@ import AssignAdvisor from './segments/assignAdvisor';
 import ContentData from './segments/contentData';
 import usePermissions from '@/hooks/usePermissions';
 import { Roles } from '@/config/roles';
+import useApproved from '@/lib/api/hooks/useApproved';
 
 const Table = ({
   info = [],
@@ -38,6 +39,7 @@ const Table = ({
   const { getUsers, deleteUser } = useUsers();
   const { assignMultipleCustomers, loading, assignAdvisor } = useCustomers();
   const { deleteCustomer, loading: deleting, error } = useCustomers();
+  const { downloadDeliveryOrder } = useApproved();
 
   const { canAssign } = usePermissions();
 
@@ -46,6 +48,9 @@ const Table = ({
     name: '',
     email: '',
     phone: '',
+    orderNumber: '',
+    city: '',
+    document: '',
     advisor: '',
     state: '',
     deliveryDate: '',
@@ -72,6 +77,20 @@ const Table = ({
         ? a.phone?.toLowerCase().includes(filters.phone.toLowerCase())
         : true;
 
+      const cityMatch = filters.city
+        ? a.city?.toLowerCase().includes(filters.city.toLowerCase())
+        : true;
+
+      const documentMatch = filters.document
+        ? a.document?.toLowerCase().includes(filters.document.toLowerCase())
+        : true;
+
+      const orderNumberMatch = filters.orderNumber
+        ? a.orderNumber
+            ?.toLowerCase()
+            .includes(filters.orderNumber.toLowerCase())
+        : true;
+
       const deliveryDateMatch = filters.deliveryDate
         ? a.deliveryDate
             ?.toLowerCase()
@@ -88,7 +107,12 @@ const Table = ({
         ? a.saleState?.toLowerCase().includes(filters.saleState.toLowerCase())
         : true;
 
-      if (view === 'customers' || view === 'delivered') {
+      if (
+        view === 'customers' ||
+        view === 'delivered' ||
+        view === 'preApproved' ||
+        view === 'approved'
+      ) {
         const advisorMatch = filters.advisor
           ? (a.advisor?.name?.toLowerCase() || 'sin asignar').includes(
               filters.advisor.toLowerCase()
@@ -105,6 +129,9 @@ const Table = ({
           nameMatch &&
           emailMatch &&
           phoneMatch &&
+          documentMatch &&
+          cityMatch &&
+          orderNumberMatch &&
           advisorMatch &&
           stateMatch &&
           deliveryDateMatch &&
@@ -113,7 +140,15 @@ const Table = ({
         );
       }
 
-      return roleMatch && nameMatch && emailMatch && phoneMatch;
+      return (
+        roleMatch &&
+        nameMatch &&
+        emailMatch &&
+        phoneMatch &&
+        cityMatch &&
+        documentMatch &&
+        orderNumberMatch
+      );
     });
 
     setFiltered(result);
@@ -246,6 +281,14 @@ const Table = ({
     }
   };
 
+  const handlePrintOrder = async (customerId, nameCustomer) => {
+    try {
+      await downloadDeliveryOrder(customerId, nameCustomer);
+    } catch (err) {
+      console.error('Error al imprimir la orden:', err);
+    }
+  };
+
   const totalPages = Math.ceil(filtered.length / rowsPerPage);
   const paginatedData = filtered.slice(
     (currentPage - 1) * rowsPerPage,
@@ -288,6 +331,7 @@ const Table = ({
             confirmDelete={confirmDelete}
             deleting={deleting}
             setShowModalChangeAdvisor={setShowModalChangeAdvisor}
+            handlePrintOrder={handlePrintOrder}
           />
         </tbody>
       </table>

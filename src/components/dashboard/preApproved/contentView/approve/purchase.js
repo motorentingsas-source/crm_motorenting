@@ -44,7 +44,9 @@ export default function Purchase({ purchase, errors, setPurchase }) {
           onChange={(e) =>
             setPurchase({ ...purchase, optionalColor: e.target.value })
           }
-          className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm"
+          className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
+            errors.optionalColor ? 'border-red-500' : 'border-gray-200'
+          }`}
         />
 
         <input

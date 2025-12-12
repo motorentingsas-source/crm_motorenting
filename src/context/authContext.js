@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }) => {
       const { data: userData } = profile;
       localStorage.setItem('usuario', JSON.stringify(userData));
       setUsuario(userData);
+      return userData;
     } catch (err) {
       throw new Error(err.message || 'Credenciales inválidas');
     }

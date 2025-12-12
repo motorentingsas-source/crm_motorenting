@@ -12,9 +12,9 @@ import AlertModal from '@/components/dashboard/modals/alertModal';
 export default function Payments() {
   const [orderNumber, setOrderNumber] = useState('');
   const [results, setResults] = useState(null);
-  const [errors, setErrors] = useState({});
+  const [errors, setError] = useState('');
   const [openModal, setOpenModal] = useState(false);
-  const [receipt, setReceipt] = useState({
+  const [form, setForm] = useState({
     receiptNumber: '',
     date: '',
     amount: '',
@@ -25,24 +25,30 @@ export default function Payments() {
 
   const handleSearch = async () => {
     if (!orderNumber.trim()) {
-      setErrors({ orderNumber: 'El número de orden es obligatorio' });
+      setError('El número de orden es obligatorio');
       return;
     }
 
     try {
       const { data } = await getPaymentByOrderNumber(orderNumber);
-      if (!data) {
-        setErrors({ orderNumber: 'Número de orden no encontrado' });
+
+      if (!data || !data.orderNumber) {
+        setError('Número de orden sin información');
+        setResults(null);
         return;
       }
-      setErrors({});
-      setResults({
-        id: data.id,
-        name: data.name,
-        orderNumber: data.orderNumber,
-        outstandingBalance: data.outstandingBalance,
+
+      setError('');
+      setResults(data);
+
+      setForm({
+        receiptNumber: '',
+        date: '',
+        amount: '',
       });
     } catch (err) {
+      setError(err.message || 'Error al buscar la orden');
+      setResults(null);
       console.error(err);
     }
   };
@@ -50,7 +56,9 @@ export default function Payments() {
   const handleSavePayment = async () => {
     if (!results) return;
 
-    if (!receipt.receiptNumber || !receipt.date || !receipt.amount) {
+    const { receiptNumber, date, amount } = form;
+
+    if (!receiptNumber || !date || !amount) {
       setAlert({
         type: 'error',
         message: 'Todos los campos son obligatorios',
@@ -60,7 +68,11 @@ export default function Payments() {
     }
 
     try {
-      const { data } = await createPayment(results.id, receipt);
+      const { data } = await createPayment(results.id, {
+        receiptNumber,
+        date,
+        amount,
+      });
 
       if (!data) {
         setAlert({
@@ -71,11 +83,13 @@ export default function Payments() {
         return;
       }
 
+      const newOutstanding = results.outstandingBalance - amount;
+      const newCredit = results.creditBalance + Math.min(0, newOutstanding);
+
       setResults({
-        id: data.customerId,
-        name: results.name,
-        orderNumber: results.orderNumber,
-        outstandingBalance: results.outstandingBalance - data.amount,
+        ...results,
+        outstandingBalance: Math.max(newOutstanding, 0),
+        creditBalance: Math.max(newCredit, 0),
       });
 
       setAlert({
@@ -88,15 +102,15 @@ export default function Payments() {
       setAlert({ type: 'error', message: 'Error al registrar pago', url: '' });
     }
 
-    setReceipt({ receiptNumber: '', date: '', amount: '' });
+    setForm({ receiptNumber: '', date: '', amount: '' });
     setOpenModal(false);
   };
 
   const clearResults = () => {
     setResults(null);
     setOrderNumber('');
-    setReceipt({ receiptNumber: '', date: '', amount: '' });
-    setErrors({});
+    setForm({ receiptNumber: '', date: '', amount: '' });
+    setError('');
     setOpenModal(false);
   };
 
@@ -107,7 +121,7 @@ export default function Payments() {
         orderNumber={orderNumber}
         setOrderNumber={setOrderNumber}
         handleSearch={handleSearch}
-        error={errors.orderNumber}
+        error={errors}
       />
       {results && results.id && (
         <ResultsTable
@@ -118,8 +132,8 @@ export default function Payments() {
       )}
       {openModal && (
         <PaymentModal
-          receipt={receipt}
-          setReceipt={setReceipt}
+          form={form}
+          setForm={setForm}
           onClose={() => setOpenModal(false)}
           onSave={handleSavePayment}
         />
@@ -180,6 +194,7 @@ function ResultsTable({ results, onPayClick, clearResults }) {
           <tr className="text-gray-600 text-sm border-b">
             <th className="pb-3">Cliente</th>
             <th className="pb-3">Saldo por pagar</th>
+            <th className="pb-3">Saldo a Favor</th>
             <th className="pb-3">Acción</th>
           </tr>
         </thead>
@@ -187,7 +202,10 @@ function ResultsTable({ results, onPayClick, clearResults }) {
           <tr className="text-gray-800 border-b">
             <td className="py-4">{results.name}</td>
             <td className="py-4 font-semibold">
-              {formatPesosRealtime(results.outstandingBalance)}
+              {formatPesosRealtime(results.outstandingBalance || 0)}
+            </td>
+            <td className="py-4 font-semibold">
+              {formatPesosRealtime(results.creditBalance || 0)}
             </td>
             <td className="py-4">
               {results.outstandingBalance > 0 ? (
@@ -217,7 +235,7 @@ function ResultsTable({ results, onPayClick, clearResults }) {
   );
 }
 
-function PaymentModal({ receipt, setReceipt, onClose, onSave }) {
+function PaymentModal({ form, setForm, onClose, onSave }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 p-4">
       <div className="bg-white w-full max-w-lg rounded-2xl shadow-xl p-6 relative border border-gray-200">
@@ -235,23 +253,23 @@ function PaymentModal({ receipt, setReceipt, onClose, onSave }) {
         <div className="grid grid-cols-1 gap-4">
           <input
             placeholder="Número de recibo"
-            value={receipt.receiptNumber}
+            value={form.receiptNumber}
             onChange={(e) =>
-              setReceipt({ ...receipt, receiptNumber: e.target.value })
+              setForm({ ...form, receiptNumber: e.target.value })
             }
             className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm focus:outline-none transition focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
           />
           <input
             type="date"
-            value={receipt.date}
-            onChange={(e) => setReceipt({ ...receipt, date: e.target.value })}
+            value={form.date}
+            onChange={(e) => setForm({ ...form, date: e.target.value })}
             className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm focus:outline-none transition focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
           />
           <input
             placeholder="Valor"
-            value={formatPesosRealtime(receipt.amount)}
+            value={form.amount ? formatPesosRealtime(form.amount) : ''}
             onChange={(e) =>
-              setReceipt({ ...receipt, amount: pesosToNumber(e.target.value) })
+              setForm({ ...form, amount: pesosToNumber(e.target.value) })
             }
             className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm focus:outline-none transition focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
           />

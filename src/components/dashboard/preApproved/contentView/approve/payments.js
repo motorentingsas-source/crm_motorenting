@@ -1,18 +1,23 @@
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { FINANCIALS_LIST } from '@/lib/api/listData/financials';
 import {
+  normalizeDateForInput,
   formatEnumText,
   formatPesosRealtime,
   pesosToNumber,
 } from '@/lib/api/utils/utils';
 
-export default function Payments({ addPayment, payments, setPayments }) {
+export default function Payments({
+  addPayment,
+  errors,
+  payments,
+  setPayments,
+}) {
   return (
     <section>
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-lg font-semibold">Datos de pagos</h2>
-
-        <button
+        <p
           onClick={addPayment}
           className="
             flex items-center gap-2
@@ -28,7 +33,7 @@ export default function Payments({ addPayment, payments, setPayments }) {
         >
           <PlusIcon className="w-5 h-5" />
           Agregar pago
-        </button>
+        </p>
       </div>
 
       {payments.map((p, i) => (
@@ -37,12 +42,17 @@ export default function Payments({ addPayment, payments, setPayments }) {
           className="border border-gray-200 p-4 rounded mb-4 grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           <select
+            value={p.financialEntity}
             onChange={(e) => {
               const copy = [...payments];
               copy[i].financialEntity = e.target.value;
               setPayments(copy);
             }}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm"
+            className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
+              errors[`payment-${i}-financialEntity`]
+                ? 'border-red-500'
+                : 'border-gray-200'
+            }`}
           >
             <option value="">Financiera</option>
             {FINANCIALS_LIST.map((f) => (
@@ -60,7 +70,11 @@ export default function Payments({ addPayment, payments, setPayments }) {
               copy[i].totalPayment = pesosToNumber(e.target.value);
               setPayments(copy);
             }}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm"
+            className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
+              errors[`payment-${i}-totalPayment`]
+                ? 'border-red-500'
+                : 'border-gray-200'
+            }`}
           />
 
           <input
@@ -71,18 +85,24 @@ export default function Payments({ addPayment, payments, setPayments }) {
               copy[i].aval = pesosToNumber(e.target.value);
               setPayments(copy);
             }}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm"
+            className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
+              errors[`payment-${i}-aval`] ? 'border-red-500' : 'border-gray-200'
+            }`}
           />
 
           <input
             type="date"
-            value={p.approvalDate}
+            value={normalizeDateForInput(p.approvalDate)}
             onChange={(e) => {
               const copy = [...payments];
               copy[i].approvalDate = e.target.value;
               setPayments(copy);
             }}
-            className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm"
+            className={`w-full border rounded-xl px-4 py-2 text-sm shadow-sm ${
+              errors[`payment-${i}-approvalDate`]
+                ? 'border-red-500'
+                : 'border-gray-200'
+            }`}
           />
         </div>
       ))}
