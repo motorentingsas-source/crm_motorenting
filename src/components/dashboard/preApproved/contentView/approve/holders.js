@@ -12,8 +12,8 @@ export default function Holders({ addHolder, errors, holders, setHolders }) {
           onClick={addHolder}
           className="
             flex items-center gap-2
-            text-blue-700 hover:bg-blue-700 hover:text-white border
-            border-blue-700  
+            text-orange-700 hover:bg-orange-700 hover:text-white border
+            border-orange-700  
             font-medium
             px-4 py-2
             rounded-xl
