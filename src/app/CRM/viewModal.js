@@ -2,7 +2,7 @@
 
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import CommentsHistory from '@/components/dashboard/comments/CommentsHistory';
-import { formatDate, formatEnumText } from '@/lib/api/utils/utils';
+import { normalizeDateForInput, formatEnumText } from '@/lib/api/utils/utils';
 import Holders from '@/components/dashboard/viewModal/holders';
 import Payments from '@/components/dashboard/viewModal/payments';
 import Receipts from '@/components/dashboard/viewModal/receipts';
@@ -80,7 +80,7 @@ export default function ViewModal({ data, type, onClose }) {
               </div>
               <div>
                 <p className="font-semibold">Fecha de Nacimiento</p>
-                <p>{formatDate(data.birthdate)}</p>
+                <p>{normalizeDateForInput(data.birthdate)}</p>
               </div>
               {type !== 'advisor' && (
                 <div>
@@ -114,12 +114,12 @@ export default function ViewModal({ data, type, onClose }) {
               )}
               <div>
                 <p className="font-semibold">Registro</p>
-                <p>{formatDate(data.createdAt)}</p>
+                <p>{normalizeDateForInput(data.createdAt)}</p>
               </div>
               {type !== 'advisor' && (
                 <div>
                   <p className="font-semibold">Fecha de Venta</p>
-                  <p>{formatDate(data.saleDate)}</p>
+                  <p>{normalizeDateForInput(data.saleDate)}</p>
                 </div>
               )}
             </div>
@@ -158,7 +158,7 @@ export default function ViewModal({ data, type, onClose }) {
                   <>
                     <div>
                       <p className="font-semibold">Fecha de Entrega</p>
-                      <p>{formatDate(data.deliveryDate)}</p>
+                      <p>{normalizeDateForInput(data.deliveryDate)}</p>
                     </div>
                     <div>
                       <p className="font-semibold">Placa</p>
