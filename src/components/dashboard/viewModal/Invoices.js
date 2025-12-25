@@ -36,7 +36,11 @@ export default function Invoices({ invoices, formatDate }) {
               </div>
               <div>
                 <p className="font-semibold">Fecha</p>
-                <p>{formatDate(invoice.date)}</p>
+                <p>
+                  {invoice?.date?.includes('T')
+                    ? invoice.date.split('T')[0]
+                    : '-'}
+                </p>
               </div>
             </div>
           ))}

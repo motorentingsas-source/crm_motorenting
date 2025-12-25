@@ -38,7 +38,11 @@ export default function Registrations({ registration, formatDate }) {
               )}
               <div>
                 <p className="font-semibold">Fecha de Matrícula</p>
-                <p>{formatDate(register.date)}</p>
+                <p>
+                  {register?.date?.includes('T')
+                    ? register.date.split('T')[0]
+                    : '-'}
+                </p>
               </div>
             </div>
           ))}
