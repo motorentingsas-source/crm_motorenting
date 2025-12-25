@@ -158,7 +158,7 @@ function SearchOrder({ orderNumber, setOrderNumber, handleSearch, error }) {
           type="text"
           value={orderNumber}
           onChange={(e) => setOrderNumber(e.target.value)}
-          placeholder="Ej: MRS0001"
+          placeholder="Ej: MR0001"
           className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm 
           shadow-sm focus:outline-none transition focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
         />
