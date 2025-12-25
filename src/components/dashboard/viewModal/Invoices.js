@@ -1,7 +1,10 @@
 import React from 'react';
-import { formatPesosRealtime } from '@/lib/api/utils/utils';
+import {
+  formatPesosRealtime,
+  normalizeDateForInput,
+} from '@/lib/api/utils/utils';
 
-export default function Invoices({ invoices, formatDate }) {
+export default function Invoices({ invoices }) {
   return (
     <details className="group border rounded-xl p-4 border-gray-200">
       <summary className="cursor-pointer font-semibold text-gray-800 text-lg flex justify-between items-center">
@@ -36,11 +39,7 @@ export default function Invoices({ invoices, formatDate }) {
               </div>
               <div>
                 <p className="font-semibold">Fecha</p>
-                <p>
-                  {invoice?.date?.includes('T')
-                    ? invoice.date.split('T')[0]
-                    : '-'}
-                </p>
+                <p>{normalizeDateForInput(invoice.date)}</p>
               </div>
             </div>
           ))}

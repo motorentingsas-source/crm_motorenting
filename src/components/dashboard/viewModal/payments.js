@@ -1,7 +1,11 @@
-import { formatEnumText, formatPesosRealtime } from '@/lib/api/utils/utils';
+import {
+  formatEnumText,
+  formatPesosRealtime,
+  normalizeDateForInput,
+} from '@/lib/api/utils/utils';
 import React from 'react';
 
-export default function Payments({ payments, formatDate }) {
+export default function Payments({ payments }) {
   return (
     <details className="group border rounded-xl p-4 border-gray-200">
       <summary className="cursor-pointer font-semibold text-gray-800 text-lg flex justify-between items-center">
@@ -31,7 +35,8 @@ export default function Payments({ payments, formatDate }) {
                 {formatPesosRealtime(p.netForPurchase)}
               </p>
               <p>
-                <strong>Fecha Aprobación:</strong> {formatDate(p.approvalDate)}
+                <strong>Fecha Aprobación:</strong>{' '}
+                {normalizeDateForInput(p.approvalDate)}
               </p>
             </div>
           ))}

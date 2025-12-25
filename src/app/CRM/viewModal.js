@@ -180,23 +180,14 @@ export default function ViewModal({ data, type, onClose }) {
 
           {data?.holders && <Holders holders={data?.holders} />}
 
-          {data?.payments && (
-            <Payments payments={data?.payments} formatDate={formatDate} />
-          )}
+          {data?.payments && <Payments payments={data?.payments} />}
 
-          {data?.receipts && (
-            <Receipts receipts={data?.receipts} formatDate={formatDate} />
-          )}
+          {data?.receipts && <Receipts receipts={data?.receipts} />}
 
-          {data?.invoices && (
-            <Invoices invoices={data?.invoices} formatDate={formatDate} />
-          )}
+          {data?.invoices && <Invoices invoices={data?.invoices} />}
 
           {data?.registration && (
-            <Registrations
-              registration={data?.registration}
-              formatDate={formatDate}
-            />
+            <Registrations registration={data?.registration} />
           )}
 
           {type !== 'advisor' && (

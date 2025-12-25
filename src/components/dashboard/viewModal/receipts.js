@@ -1,7 +1,10 @@
-import { formatPesosRealtime } from '@/lib/api/utils/utils';
+import {
+  formatPesosRealtime,
+  normalizeDateForInput,
+} from '@/lib/api/utils/utils';
 import React from 'react';
 
-export default function Receipts({ receipts, formatDate }) {
+export default function Receipts({ receipts }) {
   return (
     <details className="group border rounded-xl p-4 border-gray-200">
       <summary className="cursor-pointer font-semibold text-gray-800 text-lg flex justify-between items-center">
@@ -19,7 +22,7 @@ export default function Receipts({ receipts, formatDate }) {
                 <strong>Número de Recibo:</strong> {r.receiptNumber}
               </p>
               <p>
-                <strong>Fecha:</strong> {formatDate(r.date)}
+                <strong>Fecha:</strong> {normalizeDateForInput(r.date)}
               </p>
               <p>
                 <strong>Monto:</strong> {formatPesosRealtime(r.amount)}

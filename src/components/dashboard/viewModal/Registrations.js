@@ -1,8 +1,11 @@
 import React from 'react';
-import { formatPesosRealtime } from '@/lib/api/utils/utils';
+import {
+  formatPesosRealtime,
+  normalizeDateForInput,
+} from '@/lib/api/utils/utils';
 import usePermissions from '@/hooks/usePermissions';
 
-export default function Registrations({ registration, formatDate }) {
+export default function Registrations({ registration }) {
   const { canViewRegistrationValues } = usePermissions();
   return (
     <details className="group border rounded-xl p-4 border-gray-200">
@@ -38,11 +41,7 @@ export default function Registrations({ registration, formatDate }) {
               )}
               <div>
                 <p className="font-semibold">Fecha de Matrícula</p>
-                <p>
-                  {register?.date?.includes('T')
-                    ? register.date.split('T')[0]
-                    : '-'}
-                </p>
+                <p>{normalizeDateForInput(register.date)}</p>
               </div>
             </div>
           ))}
