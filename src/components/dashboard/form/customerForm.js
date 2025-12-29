@@ -80,7 +80,7 @@ export default function CustomerForm({
     ['name', 'Nombres y Apellidos'],
     ['email', 'Correo Electrónico', 'email'],
     ['birthdate', 'Fecha de Nacimiento', 'date'],
-    ['phone', 'Teléfono', 'number'],
+    ['phone', 'Teléfono', 'text'],
     ['address', 'Dirección'],
     ['document', 'Documento', 'number'],
   ];
