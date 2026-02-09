@@ -39,7 +39,7 @@ export default function Stadistics() {
 
   const fetchAdvisors = useCallback(async () => {
     try {
-      const { data } = await getUsers();
+      const { data } = await getUsers({ all: true });
       setAdvisors(data);
     } catch (err) {
       console.error(err);
