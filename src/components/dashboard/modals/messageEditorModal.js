@@ -20,10 +20,6 @@ export default function MessageEditorModal({ onClose }) {
     items: [],
   });
 
-  useEffect(() => {
-    fetchMessage();
-  }, [fetchMessage]);
-
   const fetchMessage = useCallback(async () => {
     try {
       const { data } = await getMotivationMessage();
@@ -42,6 +38,10 @@ export default function MessageEditorModal({ onClose }) {
       });
     }
   }, [getMotivationMessage]);
+
+  useEffect(() => {
+    fetchMessage();
+  }, [fetchMessage]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

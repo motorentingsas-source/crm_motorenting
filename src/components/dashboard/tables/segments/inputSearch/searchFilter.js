@@ -1,28 +1,38 @@
 export default function SearchFilter({
-  name = 'campo',
+  name,
   value = '',
   className = '',
-  placeholder,
   title = '',
   type = 'text',
-  handleFilterChange = () => {},
+  options = [],
+  handleFilterChange,
 }) {
-  const inputId = `filter-${name}`;
-
-  return (
-    <>
-      <label htmlFor={inputId} className="sr-only">
-        Filtrar por {name}
-      </label>
-      <input
-        id={inputId}
-        type={type}
+  if (type === 'select') {
+    return (
+      <select
         name={name}
         value={value}
         onChange={handleFilterChange}
-        placeholder={placeholder || `Filtrar por ${title}`}
         className={className}
-      />
-    </>
+      >
+        <option value="">Todos</option>
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+    );
+  }
+
+  return (
+    <input
+      type="text"
+      name={name}
+      value={value}
+      onChange={handleFilterChange}
+      placeholder={`Filtrar ${title}`}
+      className={className}
+    />
   );
 }

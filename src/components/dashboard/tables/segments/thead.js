@@ -29,6 +29,7 @@ export default function Thead({ rol, view }) {
 
         <th className="px-4 py-3">Nombre</th>
         <th className="px-4 py-3">Documento</th>
+
         {view === 'delivered' && (
           <>
             <th className="px-4 py-3">Fecha Entrega</th>
@@ -40,7 +41,7 @@ export default function Thead({ rol, view }) {
         <th className="px-4 py-3">Teléfono</th>
         <th className="px-4 py-3">Ciudad</th>
 
-        {(view === 'customers' || view == 'preApproved') && (
+        {(view === 'customers' || view === 'preApproved') && (
           <th className="px-4 py-3">Estado Actual</th>
         )}
 

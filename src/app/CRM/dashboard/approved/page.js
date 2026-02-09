@@ -1,34 +1,64 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/context/authContext';
 import Table from '@/components/dashboard/tables/table';
-import useApproved from '@/lib/api/hooks/useApproved';
+import Pagination from '@/components/dashboard/tables/segments/pagination';
 import ViewModal from '../../viewModal';
+import LoadingOverlay from '@/components/ui/LoadingOverlay';
+import useApproved from '@/lib/api/hooks/useApproved';
 import usePermissions from '@/hooks/usePermissions';
+import useColumnFilters from '@/components/dashboard/tables/hooks/useColumnFilters';
+import { useDebounce } from '@/components/dashboard/tables/hooks/useDebounce';
+import { useDragScroll } from '@/hooks/useDragScroll';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 
 export default function Approved() {
-  const [selectedApproved, setSelectedApproved] = useState(null);
-  const [approved, setApproved] = useState([]);
   const { usuario } = useAuth();
-
   const { getApproveds, exportAllCustomersApproved, loading, error } =
     useApproved();
   const { canExportApproved } = usePermissions();
 
+  const tableRef = useRef(null);
+  const drag = useDragScroll();
+
+  const [approved, setApproved] = useState([]);
+  const [meta, setMeta] = useState(null);
+  const [selectedApproved, setSelectedApproved] = useState(null);
+
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const { filters, handleFilterChange } = useColumnFilters({
+    orderNumber: '',
+    advisor: '',
+    name: '',
+    document: '',
+    email: '',
+    phone: '',
+    city: '',
+  });
+
+  const debouncedFilters = useDebounce(filters, 200);
+
   const fetchData = useCallback(async () => {
-    try {
-      const { data } = await getApproveds();
-      setApproved(data || []);
-    } catch (err) {
-      console.error(err);
-    }
-  }, [getApproveds]);
+    const res = await getApproveds({
+      page,
+      limit,
+      ...debouncedFilters,
+    });
+
+    setApproved(res.data || []);
+    setMeta(res.meta || null);
+  }, [getApproveds, page, limit, debouncedFilters]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  useEffect(() => {
+    tableRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [page]);
 
   const handleExport = async () => {
     try {
@@ -56,32 +86,50 @@ export default function Approved() {
         )}
       </div>
 
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-        {loading && (
-          <p className="text-gray-500 text-sm p-4">
-            Cargando clientes Aprobados...
-          </p>
-        )}
-        {error && <p className="text-red-500 text-sm p-4">{error}</p>}
+      <div ref={tableRef} className="bg-white rounded-lg shadow relative">
+        <LoadingOverlay show={loading} text="Cargando clientes aprobados..." />
 
-        <Table
-          info={approved}
-          view="approved"
-          setSelected={setSelectedApproved}
-          rol={usuario?.role}
-          fetchData={fetchData}
-          loading={loading}
-          error={error}
-        />
+        <div
+          ref={drag.ref}
+          onMouseDown={drag.onMouseDown}
+          onMouseUp={drag.onMouseUp}
+          onMouseLeave={drag.onMouseLeave}
+          onMouseMove={drag.onMouseMove}
+          className="relative overflow-x-auto scroll-dark cursor-grab"
+        >
+          <div className="w-full">
+            <Table
+              info={approved}
+              view="approved"
+              rol={usuario?.role}
+              loading={loading}
+              error={error}
+              filters={filters}
+              handleFilterChange={handleFilterChange}
+              setSelected={setSelectedApproved}
+              fetchData={fetchData}
+            />
+          </div>
+        </div>
 
-        {selectedApproved && (
-          <ViewModal
-            data={selectedApproved}
-            type="approved"
-            onClose={() => setSelectedApproved(null)}
+        {meta && (
+          <Pagination
+            page={meta.page}
+            totalPages={meta.totalPages}
+            limit={limit}
+            setPage={setPage}
+            setLimit={setLimit}
           />
         )}
       </div>
+
+      {selectedApproved && (
+        <ViewModal
+          data={selectedApproved}
+          type="approved"
+          onClose={() => setSelectedApproved(null)}
+        />
+      )}
     </div>
   );
 }

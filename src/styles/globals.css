@@ -49,3 +49,15 @@ body {
 .scroll-hidden {
   -ms-overflow-style: none;
 }
+
+.scroll-dark:hover::-webkit-scrollbar {
+  height: 8px;
+}
+
+.scroll-dark::-webkit-scrollbar {
+  height: 8px;
+}
+
+.scroll-dark:not(:hover)::-webkit-scrollbar-thumb {
+  background: transparent;
+}

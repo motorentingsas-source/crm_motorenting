@@ -1,12 +1,8 @@
 import usePermissions from '@/hooks/usePermissions';
 
-export default function AssignAdvisor({
-  rol,
-  view,
-  selectedIds,
-  setShowModal,
-}) {
+export default function AssignAdvisor({ view, selectedIds, setShowModal }) {
   const { canAssign } = usePermissions();
+
   return (
     <>
       {canAssign && view === 'customers' && selectedIds.length > 0 && (

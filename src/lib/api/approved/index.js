@@ -1,11 +1,37 @@
 import apiFetch from '../auth/client';
 
-export async function getPreApproveds() {
-  return apiFetch('/customers/preApproved');
+export async function getPreApproveds(params = {}) {
+  const { page = 1, limit = 10, ...filters } = params;
+
+  const query = new URLSearchParams();
+
+  query.set('page', String(page));
+  query.set('limit', String(limit));
+
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value !== '' && value !== null && value !== undefined) {
+      query.set(key, String(value));
+    }
+  });
+
+  return apiFetch(`/customers/preApproved?${query.toString()}`);
 }
 
-export async function getApproveds() {
-  return apiFetch('/customers/approved');
+export async function getApproveds(params = {}) {
+  const { page = 1, limit = 10, ...filters } = params;
+
+  const query = new URLSearchParams();
+
+  query.set('page', String(page));
+  query.set('limit', String(limit));
+
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value !== '' && value !== null && value !== undefined) {
+      query.set(key, String(value));
+    }
+  });
+
+  return apiFetch(`/customers/approved?${query.toString()}`);
 }
 
 export async function createApproved(id, dataApproved) {

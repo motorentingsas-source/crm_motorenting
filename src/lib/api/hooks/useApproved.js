@@ -25,8 +25,14 @@ export default function useApproved() {
     }
   }, []);
 
-  const getPreApprovedsFn = useCallback(() => wrap(getPreApproveds), [wrap]);
-  const getApprovedsFn = useCallback(() => wrap(getApproveds), [wrap]);
+  const getPreApprovedsFn = useCallback(
+    (page, limit) => wrap(getPreApproveds, page, limit),
+    [wrap]
+  );
+  const getApprovedsFn = useCallback(
+    (page, limit) => wrap(getApproveds, page, limit),
+    [wrap]
+  );
   const createApprovedFn = useCallback(
     (id, dto) => wrap(createApproved, id, dto),
     [wrap]

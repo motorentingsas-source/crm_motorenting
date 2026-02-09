@@ -25,7 +25,6 @@ export default function SideNavigation() {
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         md:translate-x-0 md:static`}
       >
-        {/* HEADER */}
         <div className="flex flex-col items-center py-6 space-y-2">
           <div className="w-full flex justify-end px-4 md:hidden">
             <button

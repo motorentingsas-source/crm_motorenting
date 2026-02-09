@@ -22,8 +22,8 @@ export default function InputFilters({
       show:
         ((canViewAll && view === 'customers') ||
           view === 'delivered' ||
-          view == 'preApproved' ||
-          view == 'approved') &&
+          view === 'preApproved' ||
+          view === 'approved') &&
         rol !== Roles.ASESOR,
     },
     { name: 'role', title: 'Rol', show: view === 'advisors' },
@@ -41,12 +41,19 @@ export default function InputFilters({
     {
       name: 'state',
       title: 'Estado',
-      show: view === 'customers' || view == 'preApproved',
+      show: view === 'customers',
     },
     {
       name: 'saleState',
       title: 'Estado Venta',
-      show: view === 'customers',
+      show: view === 'customers' || view === 'preApproved',
+      type: 'select',
+      options: [
+        { label: 'Pendiente por aprobar', value: 'PENDIENTE_POR_APROBAR' },
+        { label: 'Aprobado', value: 'APROBADO' },
+        { label: 'Rechazado', value: 'RECHAZADO' },
+        { label: 'No aplica', value: 'NA' },
+      ],
     },
   ];
 
@@ -68,7 +75,7 @@ export default function InputFilters({
           </th>
         ))}
 
-      <th className="px-4 py-2"></th>
+      <th></th>
     </tr>
   );
 }
