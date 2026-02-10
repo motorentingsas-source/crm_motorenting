@@ -70,9 +70,23 @@ export default function SideNavigation() {
           /* Mobile */
           ${isOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}
 
-          /* Desktop */
-          md:${isHovering ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}
+          /* Desktop (STATIC md classes) */
+          md:translate-x-0 md:opacity-100
         `}
+        style={{
+          transform:
+            typeof window !== 'undefined' && window.innerWidth >= 768
+              ? isHovering
+                ? 'translateX(0)'
+                : 'translateX(-100%)'
+              : undefined,
+          opacity:
+            typeof window !== 'undefined' && window.innerWidth >= 768
+              ? isHovering
+                ? 1
+                : 0
+              : undefined,
+        }}
       >
         <div className="relative flex flex-col items-center gap-2 border-b border-gray-800 px-4 py-6">
           <button
