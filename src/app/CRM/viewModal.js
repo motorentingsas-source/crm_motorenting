@@ -1,7 +1,6 @@
 'use client';
 
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import CommentsHistory from '@/components/dashboard/comments/commentsHistory';
 import { normalizeDateForInput, formatEnumText } from '@/lib/api/utils/utils';
 import Holders from '@/components/dashboard/viewModal/holders';
 import Payments from '@/components/dashboard/viewModal/payments';
@@ -9,6 +8,7 @@ import Receipts from '@/components/dashboard/viewModal/receipts';
 import Purchase from '@/components/dashboard/viewModal/purchase';
 import Invoices from '@/components/dashboard/viewModal/Invoices';
 import Registrations from '@/components/dashboard/viewModal/Registrations';
+import CommentsHistory from '@/components/dashboard/comments/CommentsHistory';
 
 export default function ViewModal({ data, type, onClose }) {
   if (!data) return null;
