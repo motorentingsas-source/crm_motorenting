@@ -6,13 +6,13 @@ import useStates from '@/lib/api/hooks/useStates';
 import usePermissions from '@/hooks/usePermissions';
 
 import DepartaCiudad from '@/components/dashboard/select/depart_ciud';
-import CommentsHistory from '../comments/commentsHistory';
 import BtnReturn from '../buttons/return';
 import BtnSave from '../buttons/save';
 import { ORIGIN_LIST } from '@/lib/api/listData/origin';
 import { formatEnumText, normalizePhoneCOInput } from '@/lib/api/utils/utils';
 import ContentViewModal from '../preApproved/contentViewModal';
 import CommentsManager from '../comments/commentsManager';
+import CommentsHistory from '../comments/CommentsHistory';
 
 export default function CustomerForm({
   formData,
