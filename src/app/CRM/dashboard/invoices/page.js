@@ -2,7 +2,12 @@
 
 import { useState } from 'react';
 import { formatPesosRealtime, pesosToNumber } from '@/lib/api/utils/utils';
-import { MagnifyingGlassCircleIcon } from '@heroicons/react/24/outline';
+import {
+  CheckCircleIcon,
+  DocumentTextIcon,
+  MagnifyingGlassCircleIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
 import AlertModal from '@/components/dashboard/modals/alertModal';
 import useInvoices from '@/lib/api/hooks/useInvoices';
 import CommentsManager from '@/components/dashboard/comments/commentsManager';
@@ -228,22 +233,51 @@ function ResultsTable({
   setComment,
 }) {
   return (
-    <div className="bg-white p-5 rounded-2xl shadow-lg border border-gray-100 space-y-6">
+    <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 space-y-8">
       <div>
-        <p className="text-gray-700 text-lg font-semibold">Cliente</p>
-        <p className="text-gray-900 text-sm font-medium">
-          <span className="font-semibold">Documento</span> {document}
-        </p>
-        <p className="text-gray-900 text-sm font-medium">
-          <span className="font-semibold">Nombre</span> {customerName}
-        </p>
-        <p className="text-gray-900 text-sm font-medium">
-          <span className="font-semibold">Numero de Orden</span> {orderNumber}
-        </p>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="bg-blue-100 text-orange-600 p-3 rounded-2xl">
+            <DocumentTextIcon className="w-6 h-6" />
+          </div>
+          <div>
+            <p className="text-lg font-semibold text-gray-800">
+              Información del Cliente
+            </p>
+            <p className="text-sm text-gray-500">
+              Datos asociados a la facturación
+            </p>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6 bg-gray-50 p-5 rounded-2xl">
+          <div>
+            <p className="text-xs text-gray-500 uppercase tracking-wide">
+              Documento
+            </p>
+            <p className="text-sm font-semibold text-gray-800">{document}</p>
+          </div>
+
+          <div>
+            <p className="text-xs text-gray-500 uppercase tracking-wide">
+              Nombre
+            </p>
+            <p className="text-sm font-semibold text-gray-800">
+              {customerName}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-xs text-gray-500 uppercase tracking-wide">
+              Número de Orden
+            </p>
+            <p className="text-sm font-semibold text-gray-800">{orderNumber}</p>
+          </div>
+        </div>
       </div>
 
       <InvoiceForm form={form} setForm={setForm} />
-      <div className="pt-4 border-t border-gray-100">
+
+      <div className="pt-6 border-t border-gray-100">
         <CommentsManager
           value={comment}
           onChange={setComment}
@@ -251,21 +285,26 @@ function ResultsTable({
         />
       </div>
 
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-end gap-4 pt-6 border-t border-gray-100">
         <button
           onClick={clearResults}
-          className="px-5 py-2 bg-orange-500 hover:bg-white border hover:border-orange-500 
-          hover:text-orange-500 text-gray-100 font-semibold rounded-xl shadow-sm 
-          transition active:scale-95 cursor-pointer"
+          className="flex items-center gap-2 px-6 py-2.5 rounded-2xl 
+          border border-gray-200 text-gray-600 
+          hover:bg-gray-50 hover:border-gray-300
+          transition active:scale-95 shadow-sm cursor-pointer"
         >
-          Limpiar resultados
+          <TrashIcon className="w-5 h-5" />
+          Limpiar
         </button>
 
         <button
           onClick={handleSave}
-          className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md 
+          className="flex items-center gap-2 px-6 py-2.5 rounded-2xl 
+          bg-orange-600 hover:bg-orange-700 
+          text-white font-medium shadow-md 
           transition active:scale-95 cursor-pointer"
         >
+          <CheckCircleIcon className="w-5 h-5" />
           Guardar Factura
         </button>
       </div>
@@ -275,48 +314,90 @@ function ResultsTable({
 
 function InvoiceForm({ form, setForm }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <input
-        placeholder="Número"
-        value={form.invoiceNumber}
-        onChange={(e) => setForm({ ...form, invoiceNumber: e.target.value })}
-        className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-        focus:outline-none transition focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-      />
+    <div className="space-y-8">
+      <div>
+        <p className="text-lg font-semibold text-gray-800 mb-4">
+          Información de la Factura
+        </p>
 
-      <input
-        type="date"
-        value={form.date}
-        onChange={(e) => setForm({ ...form, date: e.target.value })}
-        className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-        focus:outline-none transition focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-      />
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-gray-600 mb-1">
+              Número de factura
+            </label>
+            <input
+              value={form.invoiceNumber}
+              onChange={(e) =>
+                setForm({ ...form, invoiceNumber: e.target.value })
+              }
+              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm shadow-sm
+              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              placeholder="FAC-0001"
+            />
+          </div>
 
-      <input
-        placeholder="Valor"
-        value={formatPesosRealtime(form.value)}
-        onChange={(e) =>
-          setForm({ ...form, value: pesosToNumber(e.target.value) })
-        }
-        className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-        focus:outline-none transition focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-      />
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-gray-600 mb-1">
+              Fecha
+            </label>
+            <input
+              type="date"
+              value={form.date}
+              onChange={(e) => setForm({ ...form, date: e.target.value })}
+              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm shadow-sm
+              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+            />
+          </div>
 
-      <input
-        placeholder="Número de chasis"
-        value={form.chassisNumber}
-        onChange={(e) => setForm({ ...form, chassisNumber: e.target.value })}
-        className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-        focus:outline-none transition focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-      />
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-gray-600 mb-1">
+              Valor
+            </label>
+            <input
+              value={formatPesosRealtime(form.value)}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  value: pesosToNumber(e.target.value),
+                })
+              }
+              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm shadow-sm
+              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              placeholder="$ 0"
+            />
+          </div>
 
-      <input
-        placeholder="Número de motor"
-        value={form.engineNumber}
-        onChange={(e) => setForm({ ...form, engineNumber: e.target.value })}
-        className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm 
-        focus:outline-none transition focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-      />
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-gray-600 mb-1">
+              Número de chasis
+            </label>
+            <input
+              value={form.chassisNumber}
+              onChange={(e) =>
+                setForm({ ...form, chassisNumber: e.target.value })
+              }
+              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm shadow-sm
+              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              placeholder="Ej: CHS123456"
+            />
+          </div>
+
+          <div className="flex flex-col md:col-span-2">
+            <label className="text-sm font-medium text-gray-600 mb-1">
+              Número de motor
+            </label>
+            <input
+              value={form.engineNumber}
+              onChange={(e) =>
+                setForm({ ...form, engineNumber: e.target.value })
+              }
+              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm shadow-sm
+              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              placeholder="Ej: ENG987654"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

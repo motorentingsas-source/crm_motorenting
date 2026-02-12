@@ -1,7 +1,7 @@
 import apiFetch from '../auth/client';
 
-export async function getPaymentByOrderNumber(orderNumber) {
-  return apiFetch(`/customers/order/${orderNumber}`);
+export async function getPaymentByOrderNumber(value) {
+  return apiFetch(`/customers/payments/${value}`);
 }
 
 export async function createPayment(orderNumber, dataPayment) {

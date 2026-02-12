@@ -20,7 +20,7 @@ export default function usePayments() {
   }, []);
 
   const getPaymentByOrderNumberFn = useCallback(
-    (orderNumber) => wrap(getPaymentByOrderNumber, orderNumber),
+    (value) => wrap(getPaymentByOrderNumber, value),
     [wrap]
   );
 
