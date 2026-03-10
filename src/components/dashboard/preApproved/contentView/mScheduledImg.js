@@ -24,11 +24,20 @@ export default function MScheduledImg({ data, onSuccess, onClose }) {
     image2: '',
     date: '',
   });
+  const [plateInput, setPlateInput] = useState('');
+  const [plateValid, setPlateValid] = useState(false);
 
   const latestSchedule = useMemo(() => {
     if (!data?.deliverySchedules?.length) return null;
     return data.deliverySchedules[0];
   }, [data]);
+
+  const realPlate = data?.registration?.[0]?.plate || '';
+
+  const plateMatch = useMemo(() => {
+    if (!realPlate) return false;
+    return plateInput.trim().toUpperCase() === realPlate.toUpperCase();
+  }, [plateInput, realPlate]);
 
   const handleImageChange = (e, index) => {
     const file = e.target.files[0];
@@ -110,7 +119,7 @@ export default function MScheduledImg({ data, onSuccess, onClose }) {
     }
   };
 
-  const isDisabled = !latestSchedule || loading;
+  const isDisabled = !latestSchedule || loading || !plateMatch;
 
   return (
     <div className="p-6 space-y-8">
@@ -125,6 +134,41 @@ export default function MScheduledImg({ data, onSuccess, onClose }) {
         {!latestSchedule && (
           <p className="text-sm text-red-500 mt-2">
             Este cliente no tiene una entrega agendada.
+          </p>
+        )}
+      </div>
+
+      <div className="space-y-2 max-w-sm">
+        <label className="text-sm font-semibold text-gray-700">
+          Validar placa de la moto
+        </label>
+
+        <input
+          type="text"
+          placeholder="Ingrese la placa"
+          value={plateInput}
+          onChange={(e) => setPlateInput(e.target.value.toUpperCase())}
+          disabled={loading}
+          className={`w-full border rounded-xl p-3 text-sm bg-white
+    focus:ring-2 outline-none transition
+    ${
+      plateInput.length === 0
+        ? 'border-gray-300 focus:ring-orange-500'
+        : plateMatch
+          ? 'border-green-400 focus:ring-green-500'
+          : 'border-red-400 focus:ring-red-500'
+    }`}
+        />
+
+        {plateInput.length > 0 && (
+          <p
+            className={`text-xs font-medium ${
+              plateMatch ? 'text-green-600' : 'text-red-500'
+            }`}
+          >
+            {plateMatch
+              ? '✔ La placa coincide con la motocicleta.'
+              : '✖ La placa no coincide con la motocicleta.'}
           </p>
         )}
       </div>
