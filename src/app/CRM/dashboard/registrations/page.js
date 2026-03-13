@@ -12,12 +12,17 @@ import AlertModal from '@/components/dashboard/modals/alertModal';
 import useRegistrations from '@/lib/api/hooks/useRegistrations';
 import CommentsManager from '@/components/dashboard/comments/commentsManager';
 import { addComment } from '@/lib/api/customers';
+import { useAuth } from '@/context/authContext';
 
 export default function Registrations() {
+  const [customerID, setCustomerID] = useState('');
   const [orderNumber, setOrderNumber] = useState('');
   const [customerName, setCustomerName] = useState(null);
   const [customerDocument, setCustomerDocument] = useState(null);
   const [orderNumberFromApi, setOrderNumberFromApi] = useState(null);
+
+  const [registrationExists, setRegistrationExists] = useState(false);
+
   const [error, setError] = useState('');
   const [alert, setAlert] = useState({ type: '', message: '', url: '' });
   const [openInfo, setOpenInfo] = useState(false);
@@ -25,13 +30,19 @@ export default function Registrations() {
   const { getRegistrationByOrderNumber, updateRegistrationByOrderNumber } =
     useRegistrations();
 
+  const { usuario } = useAuth();
+
   const [form, setForm] = useState({
     plate: '',
     date: '',
     soatValue: '',
     registerValue: '',
   });
+
   const [comment, setComment] = useState('');
+
+  const canEditRegistration =
+    usuario?.role === 'SUPER_ADMIN' || !registrationExists;
 
   const handleSearch = async () => {
     if (!orderNumber.trim()) {
@@ -41,9 +52,16 @@ export default function Registrations() {
 
     try {
       const { data } = await getRegistrationByOrderNumber(orderNumber);
+
+      setCustomerID(data.customerId ?? '');
       setCustomerName(data.customerName ?? '');
       setCustomerDocument(data.document ?? '');
       setOrderNumberFromApi(data.orderNumber ?? orderNumber);
+
+      const exists =
+        !!data.plate || !!data.date || !!data.soatValue || !!data.registerValue;
+
+      setRegistrationExists(exists);
 
       if (!data.customerName) {
         setError('Número de orden sin información');
@@ -58,7 +76,7 @@ export default function Registrations() {
       }
 
       setError('');
-      setCustomerName(data.customerName ?? '');
+      setOpenInfo(false);
 
       setForm({
         plate: data.plate ?? '',
@@ -77,15 +95,29 @@ export default function Registrations() {
   };
 
   const handleSave = async () => {
-    if (!form.plate || !form.date || !form.soatValue || !form.registerValue) {
-      setAlert({
-        type: 'error',
-        message: 'Todos los campos son obligatorios',
-      });
-      return;
-    }
-
     try {
+      if (registrationExists && !canEditRegistration) {
+        if (comment.trim()) {
+          await addComment(customerID, comment.trim());
+        }
+
+        setAlert({
+          type: 'success',
+          message: 'Comentario agregado correctamente',
+        });
+
+        clearResults();
+        return;
+      }
+
+      if (!form.plate || !form.date || !form.soatValue || !form.registerValue) {
+        setAlert({
+          type: 'error',
+          message: 'Todos los campos son obligatorios',
+        });
+        return;
+      }
+
       const { data } = await updateRegistrationByOrderNumber(
         orderNumberFromApi,
         form
@@ -105,14 +137,18 @@ export default function Registrations() {
 
       setAlert({
         type: 'success',
-        message: 'Matrícula registrada correctamente',
+        message: canEditRegistration
+          ? 'Matrícula actualizada correctamente'
+          : 'Matrícula registrada correctamente',
       });
+
       clearResults();
     } catch (err) {
       console.error(err);
+
       setAlert({
         type: 'warning',
-        message: `${err || 'Error al registrar la matrícula'} `,
+        message: err?.message || 'Error al registrar la matrícula',
       });
     }
   };
@@ -120,14 +156,20 @@ export default function Registrations() {
   const clearResults = () => {
     setOrderNumber('');
     setCustomerName(null);
+    setCustomerDocument(null);
+    setOrderNumberFromApi(null);
+    setRegistrationExists(false);
+
     setForm({
       plate: '',
       date: '',
       soatValue: '',
       registerValue: '',
     });
+
     setComment('');
     setError('');
+    setOpenInfo(false);
   };
 
   return (
@@ -152,6 +194,7 @@ export default function Registrations() {
           clearResults={clearResults}
           comment={comment}
           setComment={setComment}
+          canEditRegistration={canEditRegistration}
         />
       )}
 
@@ -216,6 +259,7 @@ function ResultsTable({
   clearResults,
   comment,
   setComment,
+  canEditRegistration,
 }) {
   return (
     <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 space-y-8">
@@ -260,7 +304,11 @@ function ResultsTable({
         </div>
       </div>
 
-      <RegistrationForm form={form} setForm={setForm} />
+      <RegistrationForm
+        form={form}
+        setForm={setForm}
+        canEditRegistration={canEditRegistration}
+      />
 
       <div className="pt-6 border-t border-gray-100">
         <CommentsManager
@@ -297,7 +345,7 @@ function ResultsTable({
   );
 }
 
-function RegistrationForm({ form, setForm }) {
+function RegistrationForm({ form, setForm, canEditRegistration }) {
   return (
     <div className="space-y-6">
       <div>
@@ -315,8 +363,12 @@ function RegistrationForm({ form, setForm }) {
               onChange={(e) =>
                 setForm({ ...form, plate: e.target.value.toUpperCase() })
               }
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm shadow-sm
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              className={`w-full border rounded-2xl px-4 py-3 text-sm shadow-sm transition ${
+                canEditRegistration
+                  ? 'border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500'
+                  : 'border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed'
+              }`}
+              disabled={!canEditRegistration}
               placeholder="ABC123"
             />
           </div>
@@ -329,8 +381,12 @@ function RegistrationForm({ form, setForm }) {
               type="date"
               value={form.date}
               onChange={(e) => setForm({ ...form, date: e.target.value })}
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm shadow-sm
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              className={`w-full border rounded-2xl px-4 py-3 text-sm shadow-sm transition ${
+                canEditRegistration
+                  ? 'border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500'
+                  : 'border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed'
+              }`}
+              disabled={!canEditRegistration}
             />
           </div>
         </div>
@@ -352,8 +408,12 @@ function RegistrationForm({ form, setForm }) {
                   soatValue: pesosToNumber(e.target.value),
                 })
               }
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm shadow-sm
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              className={`w-full border rounded-2xl px-4 py-3 text-sm shadow-sm transition ${
+                canEditRegistration
+                  ? 'border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500'
+                  : 'border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed'
+              }`}
+              disabled={!canEditRegistration}
               placeholder="$ 0"
             />
           </div>
@@ -370,8 +430,12 @@ function RegistrationForm({ form, setForm }) {
                   registerValue: pesosToNumber(e.target.value),
                 })
               }
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm shadow-sm
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              className={`w-full border rounded-2xl px-4 py-3 text-sm shadow-sm transition ${
+                canEditRegistration
+                  ? 'border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500'
+                  : 'border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed'
+              }`}
+              disabled={!canEditRegistration}
               placeholder="$ 0"
             />
           </div>

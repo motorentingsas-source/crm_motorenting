@@ -12,12 +12,16 @@ import AlertModal from '@/components/dashboard/modals/alertModal';
 import useInvoices from '@/lib/api/hooks/useInvoices';
 import CommentsManager from '@/components/dashboard/comments/commentsManager';
 import { addComment } from '@/lib/api/customers';
+import { useAuth } from '@/context/authContext';
 
 export default function Invoices() {
+  const [customerID, setCustomerID] = useState('');
   const [orderNumber, setOrderNumber] = useState('');
   const [customerName, setCustomerName] = useState(null);
   const [customerDocument, setCustomerDocument] = useState(null);
   const [orderNumberFromApi, setOrderNumberFromApi] = useState(null);
+
+  const [invoiceExists, setInvoiceExists] = useState(false);
 
   const [error, setError] = useState('');
   const [alert, setAlert] = useState({ type: '', message: '', url: '' });
@@ -32,7 +36,11 @@ export default function Invoices() {
     chassisNumber: '',
     engineNumber: '',
   });
+
   const [comment, setComment] = useState('');
+  const { usuario } = useAuth();
+
+  const canEditInvoice = usuario?.role === 'SUPER_ADMIN' || !invoiceExists;
 
   const handleSearch = async () => {
     if (!orderNumber.trim()) {
@@ -43,9 +51,19 @@ export default function Invoices() {
     try {
       const { data } = await getInvoiceByOrderNumber(orderNumber);
 
+      setCustomerID(data.customerId ?? '');
       setCustomerName(data.customerName ?? '');
       setCustomerDocument(data.document ?? '');
       setOrderNumberFromApi(data.orderNumber ?? orderNumber);
+
+      const exists =
+        !!data.invoiceNumber ||
+        !!data.date ||
+        !!data.value ||
+        !!data.chassisNumber ||
+        !!data.engineNumber;
+
+      setInvoiceExists(exists);
 
       if (!data.customerName) {
         setError('Número de orden sin información');
@@ -81,21 +99,35 @@ export default function Invoices() {
   };
 
   const handleSave = async () => {
-    if (
-      !form.invoiceNumber ||
-      !form.date ||
-      !form.value ||
-      !form.chassisNumber ||
-      !form.engineNumber
-    ) {
-      setAlert({
-        type: 'error',
-        message: 'Todos los campos son obligatorios',
-      });
-      return;
-    }
-
     try {
+      if (invoiceExists && !canEditInvoice) {
+        if (comment.trim()) {
+          await addComment(customerID, comment.trim());
+        }
+
+        setAlert({
+          type: 'success',
+          message: 'Comentario agregado correctamente',
+        });
+
+        clearResults();
+        return;
+      }
+
+      if (
+        !form.invoiceNumber ||
+        !form.date ||
+        !form.value ||
+        !form.chassisNumber ||
+        !form.engineNumber
+      ) {
+        setAlert({
+          type: 'error',
+          message: 'Todos los campos son obligatorios',
+        });
+        return;
+      }
+
       const { data } = await updateInvoiceByOrderNumber(
         orderNumberFromApi,
         form
@@ -115,15 +147,18 @@ export default function Invoices() {
 
       setAlert({
         type: 'success',
-        message: 'Factura registrada correctamente',
+        message: canEditInvoice
+          ? 'Factura actualizada correctamente'
+          : 'Factura registrada correctamente',
       });
 
       clearResults();
     } catch (err) {
       console.error(err);
+
       setAlert({
         type: 'warning',
-        message: `${err || 'Error al registrar la factura'}`,
+        message: err?.message || 'Error al registrar la factura',
       });
     }
   };
@@ -133,6 +168,8 @@ export default function Invoices() {
     setCustomerName(null);
     setCustomerDocument(null);
     setOrderNumberFromApi(null);
+    setInvoiceExists(false);
+
     setForm({
       invoiceNumber: '',
       date: '',
@@ -140,6 +177,7 @@ export default function Invoices() {
       chassisNumber: '',
       engineNumber: '',
     });
+
     setComment('');
     setError('');
     setOpenInfo(false);
@@ -167,6 +205,7 @@ export default function Invoices() {
           clearResults={clearResults}
           comment={comment}
           setComment={setComment}
+          canEditInvoice={canEditInvoice}
         />
       )}
 
@@ -231,6 +270,7 @@ function ResultsTable({
   clearResults,
   comment,
   setComment,
+  canEditInvoice,
 }) {
   return (
     <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 space-y-8">
@@ -275,7 +315,11 @@ function ResultsTable({
         </div>
       </div>
 
-      <InvoiceForm form={form} setForm={setForm} />
+      <InvoiceForm
+        form={form}
+        setForm={setForm}
+        canEditInvoice={canEditInvoice}
+      />
 
       <div className="pt-6 border-t border-gray-100">
         <CommentsManager
@@ -312,7 +356,16 @@ function ResultsTable({
   );
 }
 
-function InvoiceForm({ form, setForm }) {
+function InvoiceForm({ form, setForm, canEditInvoice }) {
+  const inputBase =
+    'w-full border rounded-2xl px-4 py-3 text-sm shadow-sm transition';
+
+  const inputEditable =
+    'border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500';
+
+  const inputLocked =
+    'border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed';
+
   return (
     <div className="space-y-8">
       <div>
@@ -330,9 +383,11 @@ function InvoiceForm({ form, setForm }) {
               onChange={(e) =>
                 setForm({ ...form, invoiceNumber: e.target.value })
               }
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm shadow-sm
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              className={`${inputBase} ${
+                canEditInvoice ? inputEditable : inputLocked
+              }`}
               placeholder="FAC-0001"
+              disabled={!canEditInvoice}
             />
           </div>
 
@@ -344,8 +399,10 @@ function InvoiceForm({ form, setForm }) {
               type="date"
               value={form.date}
               onChange={(e) => setForm({ ...form, date: e.target.value })}
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm shadow-sm
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              className={`${inputBase} ${
+                canEditInvoice ? inputEditable : inputLocked
+              }`}
+              disabled={!canEditInvoice}
             />
           </div>
 
@@ -361,9 +418,11 @@ function InvoiceForm({ form, setForm }) {
                   value: pesosToNumber(e.target.value),
                 })
               }
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm shadow-sm
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              className={`${inputBase} ${
+                canEditInvoice ? inputEditable : inputLocked
+              }`}
               placeholder="$ 0"
+              disabled={!canEditInvoice}
             />
           </div>
 
@@ -376,9 +435,11 @@ function InvoiceForm({ form, setForm }) {
               onChange={(e) =>
                 setForm({ ...form, chassisNumber: e.target.value })
               }
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm shadow-sm
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              className={`${inputBase} ${
+                canEditInvoice ? inputEditable : inputLocked
+              }`}
               placeholder="Ej: CHS123456"
+              disabled={!canEditInvoice}
             />
           </div>
 
@@ -391,9 +452,11 @@ function InvoiceForm({ form, setForm }) {
               onChange={(e) =>
                 setForm({ ...form, engineNumber: e.target.value })
               }
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm shadow-sm
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+              className={`${inputBase} ${
+                canEditInvoice ? inputEditable : inputLocked
+              }`}
               placeholder="Ej: ENG987654"
+              disabled={!canEditInvoice}
             />
           </div>
         </div>

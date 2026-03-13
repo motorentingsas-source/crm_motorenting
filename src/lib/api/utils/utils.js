@@ -12,16 +12,27 @@ export function toFullISO(input) {
   return isNaN(d.getTime()) ? null : d.toISOString();
 }
 
-export function normalizeDateForInput(input) {
-  if (!input) return '';
+export function normalizeDateForInput(date) {
+  if (!date) return '';
 
   try {
-    const dateOnly = input.split('T')[0]; // Ignora hora
-    const [year, month, day] = dateOnly.split('-');
+    // ISO: 2026-03-13T01:26:12.960Z
+    if (date.includes('T')) {
+      return date.substring(0, 10);
+    }
 
-    if (!year || !month || !day) return '';
+    // DD/MM/YYYY → YYYY-MM-DD
+    if (date.includes('/')) {
+      const [day, month, year] = date.split('/');
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    }
 
-    return `${day}/${month}/${year}`;
+    // YYYY-MM-DD
+    if (date.includes('-')) {
+      return date.substring(0, 10);
+    }
+
+    return '';
   } catch {
     return '';
   }

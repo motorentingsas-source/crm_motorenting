@@ -9,7 +9,11 @@ import DepartaCiudad from '@/components/dashboard/select/depart_ciud';
 import BtnReturn from '../buttons/return';
 import BtnSave from '../buttons/save';
 import { ORIGIN_LIST } from '@/lib/api/listData/origin';
-import { formatEnumText, normalizePhoneCOInput } from '@/lib/api/utils/utils';
+import {
+  normalizeDateForInput,
+  formatEnumText,
+  normalizePhoneCOInput,
+} from '@/lib/api/utils/utils';
 import ContentViewModal from '../preApproved/contentViewModal';
 import CommentsManager from '../comments/commentsManager';
 import CommentsHistory from '../comments/CommentsHistory';
@@ -92,7 +96,11 @@ export default function CustomerForm({
               <input
                 type={type}
                 name={name}
-                value={formData[name] || ''}
+                value={
+                  type === 'date'
+                    ? normalizeDateForInput(formData[name])
+                    : formData[name] || ''
+                }
                 onChange={handleChange}
                 disabled={isLocked}
                 required
@@ -190,7 +198,7 @@ export default function CustomerForm({
               <input
                 type="date"
                 name="saleDate"
-                value={formData.saleDate || ''}
+                value={normalizeDateForInput(formData.saleDate)}
                 onChange={handleChange}
                 required
                 className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm shadow-sm focus:outline-none transition focus:ring-2 focus:ring-orange-500 focus:border-orange-500"

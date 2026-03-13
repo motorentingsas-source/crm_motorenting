@@ -43,6 +43,7 @@ export async function createCustomer(dto) {
   const body = {
     ...dto,
     birthdate: dto.birthdate ? toFullISO(dto.birthdate) : undefined,
+    saleDate: dto.saleDate ? toFullISO(dto.saleDate) : undefined,
     advisorId: Number(dto.advisorId),
     stateId: Number(dto.stateId),
   };
@@ -85,6 +86,7 @@ export async function updateCustomer(id, dto) {
     stateId: Number(cleanDto.stateId) || null,
     advisorId: Number(cleanDto.advisorId) || null,
     birthdate: cleanDto.birthdate ? toFullISO(cleanDto.birthdate) : undefined,
+    saleDate: cleanDto.saleDate ? toFullISO(cleanDto.saleDate) : undefined,
   };
 
   return apiFetch(`/customers/${id}`, {
