@@ -5,6 +5,7 @@ import {
   normalizeDateForInput,
   formatEnumText,
   formatPesosRealtime,
+  formatDateLocaleBogota,
 } from '@/lib/api/utils/utils';
 import Holders from '@/components/dashboard/viewModal/holders';
 import Payments from '@/components/dashboard/viewModal/payments';
@@ -178,7 +179,7 @@ export default function ViewModal({ data, type, onClose }) {
                     <div>
                       <p className="font-semibold">Fecha Finalizado</p>
                       <p>
-                        {normalizeDateForInput(data.terminationDate) || '---'}
+                        {formatDateLocaleBogota(data.terminationDate) || '---'}
                       </p>
                     </div>
                     <div>

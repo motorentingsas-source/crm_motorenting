@@ -16,14 +16,12 @@ export function normalizeDateForInput(input) {
   if (!input) return '';
 
   try {
-    const date = new Date(input);
+    const dateOnly = input.split('T')[0]; // Ignora hora
+    const [year, month, day] = dateOnly.split('-');
 
-    return date.toLocaleDateString('es-CO', {
-      timeZone: 'America/Bogota',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
+    if (!year || !month || !day) return '';
+
+    return `${day}/${month}/${year}`;
   } catch {
     return '';
   }
@@ -186,4 +184,21 @@ export function formatToAmPm(time24) {
   hour = hour === 0 ? 12 : hour;
 
   return `${hour.toString().padStart(2, '0')}:${minute} ${period}`;
+}
+
+export function formatDateLocaleBogota(text) {
+  if (!text) return '';
+
+  try {
+    const date = new Date(text);
+
+    return date.toLocaleDateString('es-CO', {
+      timeZone: 'America/Bogota',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  } catch {
+    return '';
+  }
 }
