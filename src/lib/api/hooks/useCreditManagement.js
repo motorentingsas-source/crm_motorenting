@@ -23,7 +23,7 @@ export default function useCreditManagement() {
   }, []);
 
   const getAllCreditManagementFn = useCallback(
-    (page, limit) => wrap(getAllCreditManagement, { page, limit }),
+    (page, limit) => wrap(getAllCreditManagement, page, limit),
     [wrap]
   );
 

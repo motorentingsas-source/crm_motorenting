@@ -26,7 +26,7 @@ export default function useMotoForDelivery() {
   }, []);
 
   const getAllMotoForDeliveryFn = useCallback(
-    (page, limit) => wrap(getAllMotoForDelivery, { page, limit }),
+    (page, limit) => wrap(getAllMotoForDelivery, page, limit),
     [wrap]
   );
 
@@ -36,7 +36,7 @@ export default function useMotoForDelivery() {
   );
 
   const getMotorcyclesScheduledFn = useCallback(
-    (page, limit) => wrap(getMotorcyclesScheduled, { page, limit }),
+    (page, limit) => wrap(getMotorcyclesScheduled, page, limit),
     [wrap]
   );
 

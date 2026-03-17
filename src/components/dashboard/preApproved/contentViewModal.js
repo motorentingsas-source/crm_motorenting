@@ -39,9 +39,26 @@ export default function ContentViewModal({ view, data, type, onClose }) {
           )}
           {view === 'motorcyclesScheduled' && (
             <>
-              {data.action === 'Entregar' && (
+              {data.action === 'Entregar' && data.outstandingBalance === 0 && (
                 <MScheduledImg data={data} onClose={onClose} />
               )}
+
+              {data.action === 'Entregar' && data.outstandingBalance > 0 && (
+                <div className="text-center py-10">
+                  <h2 className="text-xl font-semibold text-red-600 mb-4">
+                    No se puede realizar la entrega
+                  </h2>
+
+                  <p className="text-gray-600">
+                    El cliente tiene un saldo pendiente de:
+                  </p>
+
+                  <p className="text-2xl font-bold text-red-600 mt-2">
+                    ${data.outstandingBalance.toLocaleString('es-CO')}
+                  </p>
+                </div>
+              )}
+
               {data.action === 'Rechazar' && (
                 <Decline data={data} onClose={onClose} view={view} />
               )}
