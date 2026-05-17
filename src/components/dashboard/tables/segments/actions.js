@@ -101,7 +101,7 @@ export default function Actions({
 
       {(view === 'approved' || view === 'delivered') && canPrinterApproved && (
         <ActionButton
-          onClick={() => handlePrintOrder(info.id, info.name)}
+          onClick={() => handlePrintOrder(info)}
           disabled={isLocked || isLockedSale}
           color="text-purple-500 hover:text-purple-700"
           icon={PrinterIcon}

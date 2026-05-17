@@ -166,9 +166,21 @@ const Table = ({
     }
   };
 
-  const handlePrintOrder = async (customerId, nameCustomer) => {
+  const handlePrintOrder = async (info) => {
     try {
-      await downloadDeliveryOrder(customerId, nameCustomer);
+      if (
+        info.creditManagementStatus === 'APROBADO' &&
+        info.motoForDeliveryStatus === 'APROBADO'
+      ) {
+        await downloadDeliveryOrder(info.id, info.name);
+        return;
+      }
+
+      setAlert({
+        type: 'warning',
+        message:
+          'La orden de entrega no está disponible falta por aprobar Gestión de Crédito y/o Moto para Entrega.',
+      });
     } catch (err) {
       setAlert({
         type: 'warning',

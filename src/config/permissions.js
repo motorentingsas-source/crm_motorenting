@@ -142,7 +142,7 @@ export const ROLE_PERMISSIONS = {
     canDeleteApproved: false,
     canDelete: false,
     canExport: false,
-    canExportApproved: false,
+    canExportApproved: true,
     canImport: false,
     canAssign: false,
     canPrinterApproved: false,
