@@ -6,7 +6,6 @@ import Table from '@/components/dashboard/tables/table';
 import Pagination from '@/components/dashboard/tables/segments/pagination';
 import LoadingOverlay from '@/components/ui/LoadingOverlay';
 import useColumnFilters from '@/components/dashboard/tables/hooks/useColumnFilters';
-import { useDebounce } from '@/components/dashboard/tables/hooks/useDebounce';
 import { useDragScroll } from '@/hooks/useDragScroll';
 import ContentViewModal from '@/components/dashboard/preApproved/contentViewModal';
 import useMotoForDelivery from '@/lib/api/hooks/useMotoForDelivery';
@@ -22,10 +21,16 @@ export default function MotoForDelivery() {
   const [meta, setMeta] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
 
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-
-  const { filters, handleFilterChange } = useColumnFilters({
+  const {
+    filters,
+    handleFilterChange,
+    debouncedFilters,
+    page,
+    setPage,
+    limit,
+    setLimit,
+    runLatest,
+  } = useColumnFilters({
     orderNumber: '',
     advisor: '',
     name: '',
@@ -36,18 +41,21 @@ export default function MotoForDelivery() {
     reference: '',
   });
 
-  const debouncedFilters = useDebounce(filters, 200);
-
   const fetchData = useCallback(async () => {
-    const res = await getAllMotoForDelivery({
-      page,
-      limit,
-      ...debouncedFilters,
-    });
+    const res = await runLatest(() =>
+      getAllMotoForDelivery({
+        page,
+        limit,
+        ...debouncedFilters,
+      })
+    );
+
+    // Llegó una respuesta más reciente: se descarta esta.
+    if (!res) return;
 
     setMotoForDelivery(res.data || []);
     setMeta(res.meta || null);
-  }, [getAllMotoForDelivery, page, limit, debouncedFilters]);
+  }, [getAllMotoForDelivery, runLatest, page, limit, debouncedFilters]);
 
   useEffect(() => {
     fetchData();

@@ -9,7 +9,6 @@ import LoadingOverlay from '@/components/ui/LoadingOverlay';
 import useApproved from '@/lib/api/hooks/useApproved';
 import usePermissions from '@/hooks/usePermissions';
 import useColumnFilters from '@/components/dashboard/tables/hooks/useColumnFilters';
-import { useDebounce } from '@/components/dashboard/tables/hooks/useDebounce';
 import { useDragScroll } from '@/hooks/useDragScroll';
 import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import ContentViewModal from '@/components/dashboard/preApproved/contentViewModal';
@@ -31,10 +30,16 @@ export default function Approved() {
   const [selectedStateTermination, setSelectedStateTermination] =
     useState(null);
 
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-
-  const { filters, handleFilterChange } = useColumnFilters({
+  const {
+    filters,
+    handleFilterChange,
+    debouncedFilters,
+    page,
+    setPage,
+    limit,
+    setLimit,
+    runLatest,
+  } = useColumnFilters({
     orderNumber: '',
     advisor: '',
     name: '',
@@ -45,20 +50,24 @@ export default function Approved() {
     financialEntity: '',
     approvalDate: '',
     creditManagement: '',
+    motoForDelivery: '',
   });
 
-  const debouncedFilters = useDebounce(filters, 200);
-
   const fetchData = useCallback(async () => {
-    const res = await getApproveds({
-      page,
-      limit,
-      ...debouncedFilters,
-    });
+    const res = await runLatest(() =>
+      getApproveds({
+        page,
+        limit,
+        ...debouncedFilters,
+      })
+    );
+
+    // Llegó una respuesta más reciente: se descarta esta.
+    if (!res) return;
 
     setApproved(res.data || []);
     setMeta(res.meta || null);
-  }, [getApproveds, page, limit, debouncedFilters]);
+  }, [getApproveds, runLatest, page, limit, debouncedFilters]);
 
   useEffect(() => {
     fetchData();

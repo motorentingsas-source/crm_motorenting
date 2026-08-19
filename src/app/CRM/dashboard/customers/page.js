@@ -10,7 +10,6 @@ import AlertModal from '@/components/dashboard/modals/alertModal';
 import ViewModal from '../../viewModal';
 import LoadingOverlay from '@/components/ui/LoadingOverlay';
 import useColumnFilters from '@/components/dashboard/tables/hooks/useColumnFilters';
-import { useDebounce } from '@/components/dashboard/tables/hooks/useDebounce';
 import { useDragScroll } from '@/hooks/useDragScroll';
 import ConfirmChangeWarehouseModal from '@/components/dashboard/modals/confirmChangeWarehouseModal';
 
@@ -23,9 +22,6 @@ export default function Customers() {
   const [customers, setCustomers] = useState([]);
   const [meta, setMeta] = useState(null);
 
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-
   const [archivo, setArchivo] = useState(null);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [handleStateChange, setHandleStateChange] = useState(null);
@@ -36,7 +32,16 @@ export default function Customers() {
     url: '',
   });
 
-  const { filters, handleFilterChange } = useColumnFilters({
+  const {
+    filters,
+    handleFilterChange,
+    debouncedFilters,
+    page,
+    setPage,
+    limit,
+    setLimit,
+    runLatest,
+  } = useColumnFilters({
     advisor: '',
     name: '',
     document: '',
@@ -47,22 +52,25 @@ export default function Customers() {
     saleState: '',
   });
 
-  const debouncedFilters = useDebounce(filters, 200);
-
   const fetchCustomers = useCallback(async () => {
     try {
-      const res = await getCustomers({
-        page,
-        limit,
-        ...debouncedFilters,
-      });
+      const res = await runLatest(() =>
+        getCustomers({
+          page,
+          limit,
+          ...debouncedFilters,
+        })
+      );
+
+      // Llegó una respuesta más reciente: se descarta esta.
+      if (!res) return;
 
       setCustomers(res.data || []);
       setMeta(res.meta || null);
     } catch (err) {
       console.error(err);
     }
-  }, [getCustomers, page, limit, debouncedFilters]);
+  }, [getCustomers, runLatest, page, limit, debouncedFilters]);
 
   useEffect(() => {
     fetchCustomers();

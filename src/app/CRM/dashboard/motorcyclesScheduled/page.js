@@ -6,7 +6,6 @@ import Table from '@/components/dashboard/tables/table';
 import Pagination from '@/components/dashboard/tables/segments/pagination';
 import LoadingOverlay from '@/components/ui/LoadingOverlay';
 import useColumnFilters from '@/components/dashboard/tables/hooks/useColumnFilters';
-import { useDebounce } from '@/components/dashboard/tables/hooks/useDebounce';
 import { useDragScroll } from '@/hooks/useDragScroll';
 import ContentViewModal from '@/components/dashboard/preApproved/contentViewModal';
 import useMotoForDelivery from '@/lib/api/hooks/useMotoForDelivery';
@@ -22,34 +21,43 @@ export default function MotorcyclesScheduled() {
   const [meta, setMeta] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
 
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-
-  const { filters, handleFilterChange } = useColumnFilters({
+  const {
+    filters,
+    handleFilterChange,
+    debouncedFilters,
+    page,
+    setPage,
+    limit,
+    setLimit,
+    runLatest,
+  } = useColumnFilters({
     orderNumber: '',
     advisor: '',
     name: '',
     phone: '',
     distributor: '',
-    financialEntity: '',
     reference: '',
     plate: '',
     scheduledDate: '',
-    deliveryTime: '',
+    scheduledTime: '',
+    address: '',
   });
 
-  const debouncedFilters = useDebounce(filters, 200);
-
   const fetchData = useCallback(async () => {
-    const res = await getMotorcyclesScheduled({
-      page,
-      limit,
-      ...debouncedFilters,
-    });
+    const res = await runLatest(() =>
+      getMotorcyclesScheduled({
+        page,
+        limit,
+        ...debouncedFilters,
+      })
+    );
+
+    // Llegó una respuesta más reciente: se descarta esta.
+    if (!res) return;
 
     setMotorcyclesScheduled(res.data || []);
     setMeta(res.meta || null);
-  }, [getMotorcyclesScheduled, page, limit, debouncedFilters]);
+  }, [getMotorcyclesScheduled, runLatest, page, limit, debouncedFilters]);
 
   useEffect(() => {
     fetchData();

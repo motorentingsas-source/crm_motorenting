@@ -10,7 +10,6 @@ import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import usePermissions from '@/hooks/usePermissions';
 import LoadingOverlay from '@/components/ui/LoadingOverlay';
 import useColumnFilters from '@/components/dashboard/tables/hooks/useColumnFilters';
-import { useDebounce } from '@/components/dashboard/tables/hooks/useDebounce';
 import { useDragScroll } from '@/hooks/useDragScroll';
 
 export default function Delivered() {
@@ -26,10 +25,16 @@ export default function Delivered() {
   const [meta, setMeta] = useState(null);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
 
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-
-  const { filters, handleFilterChange } = useColumnFilters({
+  const {
+    filters,
+    handleFilterChange,
+    debouncedFilters,
+    page,
+    setPage,
+    limit,
+    setLimit,
+    runLatest,
+  } = useColumnFilters({
     orderNumber: '',
     advisor: '',
     name: '',
@@ -42,18 +47,21 @@ export default function Delivered() {
     terminationStatus: '',
   });
 
-  const debouncedFilters = useDebounce(filters, 200);
-
   const fetchData = useCallback(async () => {
-    const res = await getDeliveredCustomers({
-      page,
-      limit,
-      ...debouncedFilters,
-    });
+    const res = await runLatest(() =>
+      getDeliveredCustomers({
+        page,
+        limit,
+        ...debouncedFilters,
+      })
+    );
+
+    // Llegó una respuesta más reciente: se descarta esta.
+    if (!res) return;
 
     setCustomers(res.data || []);
     setMeta(res.meta || null);
-  }, [getDeliveredCustomers, page, limit, debouncedFilters]);
+  }, [getDeliveredCustomers, runLatest, page, limit, debouncedFilters]);
 
   useEffect(() => {
     fetchData();

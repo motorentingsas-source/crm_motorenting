@@ -2,7 +2,8 @@ import { Roles } from '@/config/roles';
 import usePermissions from '@/hooks/usePermissions';
 
 export default function Thead({ rol, view }) {
-  const { canViewAll, canChangeStatusMotorcyclesScheduled } = usePermissions();
+  const { canViewAll, canAssign, canChangeStatusMotorcyclesScheduled } =
+    usePermissions();
 
   return (
     <thead className="bg-gray-100 border-b border-gray-200">
@@ -19,11 +20,12 @@ export default function Thead({ rol, view }) {
           <th className="px-4 py-3">Numero de Orden</th>
         )}
 
+        {view === 'customers' && canAssign && (
+          <th className="px-4 py-3 text-center">Asignar</th>
+        )}
+
         {view === 'customers' && canViewAll && (
-          <>
-            <th className="px-4 py-3 text-center">Asignar</th>
-            <th className="px-4 py-3">Asesor</th>
-          </>
+          <th className="px-4 py-3">Asesor</th>
         )}
 
         {(view === 'delivered' ||

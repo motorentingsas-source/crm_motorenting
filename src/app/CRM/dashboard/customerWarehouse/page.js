@@ -8,7 +8,6 @@ import ViewModal from '../../viewModal';
 import ContentViewModal from '@/components/dashboard/preApproved/contentViewModal';
 import LoadingOverlay from '@/components/ui/LoadingOverlay';
 import useColumnFilters from '@/components/dashboard/tables/hooks/useColumnFilters';
-import { useDebounce } from '@/components/dashboard/tables/hooks/useDebounce';
 import { useDragScroll } from '@/hooks/useDragScroll';
 import useCustomers from '@/lib/api/hooks/useCustomers';
 import ConfirmChangeWarehouseModal from '@/components/dashboard/modals/confirmChangeWarehouseModal';
@@ -26,31 +25,41 @@ export default function CustomerWarehouse() {
     useState(null);
   const [selectedState, setSelectedState] = useState(null);
 
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-
-  const { filters, handleFilterChange } = useColumnFilters({
+  const {
+    filters,
+    handleFilterChange,
+    debouncedFilters,
+    page,
+    setPage,
+    limit,
+    setLimit,
+    runLatest,
+  } = useColumnFilters({
     advisor: '',
     name: '',
     document: '',
     email: '',
     phone: '',
     city: '',
+    state: '',
     saleState: '',
   });
 
-  const debouncedFilters = useDebounce(filters, 200);
-
   const fetchData = useCallback(async () => {
-    const res = await getArchivedCustomers({
-      page,
-      limit,
-      ...debouncedFilters,
-    });
+    const res = await runLatest(() =>
+      getArchivedCustomers({
+        page,
+        limit,
+        ...debouncedFilters,
+      })
+    );
+
+    // Llegó una respuesta más reciente: se descarta esta.
+    if (!res) return;
 
     setCustomerWarehouse(res.data || []);
     setMeta(res.meta || null);
-  }, [getArchivedCustomers, page, limit, debouncedFilters]);
+  }, [getArchivedCustomers, runLatest, page, limit, debouncedFilters]);
 
   useEffect(() => {
     fetchData();

@@ -36,7 +36,8 @@ export default function CustomerForm({
   const [editApproved, setEditApproved] = useState(false);
   const { getUsers } = useUsers();
   const { getStates } = useStates();
-  const { canViewAll, canAssign, canUpdateApproved } = usePermissions();
+  const { canViewAll, canAssign, canUpdateApproved, canUpdateDelivered } =
+    usePermissions();
 
   const fetchUsers = useCallback(async () => {
     try {
@@ -74,6 +75,12 @@ export default function CustomerForm({
       ...(name === 'department' ? { city: '' } : {}),
     }));
   };
+
+  // Editor completo del expediente (moto, titulares, pagos, recibos, retomas,
+  // otras compras y distribuidor). En Entregados solo lo abre el super admin.
+  const canEditFullRecord =
+    (canUpdateApproved && view === 'approved') ||
+    (canUpdateDelivered && view === 'delivered');
 
   const baseFields = [
     ['name', 'Nombres y Apellidos'],
@@ -225,7 +232,7 @@ export default function CustomerForm({
         )}
       </div>
 
-      {canUpdateApproved && view === 'approved' && (
+      {canEditFullRecord && (
         <p
           onClick={() => setEditApproved(true)}
           className="text-orange-400 hover:text-orange-600 underline text-sm font-medium transition-colors cursor-pointer"
@@ -238,6 +245,7 @@ export default function CustomerForm({
         <ContentViewModal
           data={{ ...formData, action: 'approve' }}
           view="preApproved"
+          redirectTo={`/CRM/dashboard/${view}`}
           onClose={() => setEditApproved(false)}
         />
       )}
