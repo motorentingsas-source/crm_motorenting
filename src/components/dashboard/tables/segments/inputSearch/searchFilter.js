@@ -13,7 +13,8 @@ export default function SearchFilter({
         name={name}
         value={value}
         onChange={handleFilterChange}
-        className={className}
+        aria-label={`Filtrar ${title}`}
+        className={`${className} cursor-pointer`}
       >
         <option value="">Todos</option>
         {options.map((opt) => (
@@ -25,6 +26,32 @@ export default function SearchFilter({
     );
   }
 
+  if (type === 'date') {
+    return (
+      <input
+        type="date"
+        name={name}
+        value={value}
+        onChange={handleFilterChange}
+        aria-label={`Filtrar ${title}`}
+        className={className}
+      />
+    );
+  }
+
+  if (type === 'time') {
+    return (
+      <input
+        type="time"
+        name={name}
+        value={value}
+        onChange={handleFilterChange}
+        aria-label={`Filtrar ${title}`}
+        className={className}
+      />
+    );
+  }
+
   return (
     <input
       type="text"
@@ -32,6 +59,7 @@ export default function SearchFilter({
       value={value}
       onChange={handleFilterChange}
       placeholder={`Filtrar ${title}`}
+      aria-label={`Filtrar ${title}`}
       className={className}
     />
   );

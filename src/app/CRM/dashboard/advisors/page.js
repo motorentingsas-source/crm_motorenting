@@ -13,7 +13,6 @@ import MessageEditorModal from '@/components/dashboard/modals/messageEditorModal
 import { Roles } from '@/config/roles';
 import useUsers from '@/lib/api/hooks/useUsers';
 import useColumnFilters from '@/components/dashboard/tables/hooks/useColumnFilters';
-import { useDebounce } from '@/components/dashboard/tables/hooks/useDebounce';
 import { useDragScroll } from '@/hooks/useDragScroll';
 
 export default function Advisors() {
@@ -25,13 +24,19 @@ export default function Advisors() {
   const [advisors, setAdvisors] = useState([]);
   const [meta, setMeta] = useState(null);
 
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-
   const [selectedAdvisor, setSelectedAdvisor] = useState(null);
   const [showEditor, setShowEditor] = useState(false);
 
-  const { filters, handleFilterChange } = useColumnFilters({
+  const {
+    filters,
+    handleFilterChange,
+    debouncedFilters,
+    page,
+    setPage,
+    limit,
+    setLimit,
+    runLatest,
+  } = useColumnFilters({
     role: '',
     name: '',
     document: '',
@@ -40,30 +45,29 @@ export default function Advisors() {
     city: '',
   });
 
-  const debouncedFilters = useDebounce(filters, 200);
-
   const fetchAdvisors = useCallback(async () => {
     try {
-      const res = await getUsers({
-        page,
-        limit,
-        ...debouncedFilters,
-      });
+      const res = await runLatest(() =>
+        getUsers({
+          page,
+          limit,
+          ...debouncedFilters,
+        })
+      );
+
+      // Llegó una respuesta más reciente: se descarta esta.
+      if (!res) return;
 
       setAdvisors(res.data || []);
       setMeta(res.meta || null);
     } catch (err) {
       console.error(err);
     }
-  }, [getUsers, page, limit, debouncedFilters]);
+  }, [getUsers, runLatest, page, limit, debouncedFilters]);
 
   useEffect(() => {
     fetchAdvisors();
   }, [fetchAdvisors]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedFilters]);
 
   useEffect(() => {
     if (!tableRef.current) return;

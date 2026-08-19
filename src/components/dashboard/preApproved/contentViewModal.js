@@ -6,7 +6,13 @@ import CManagementObservation from './contentView/cManagementObservation';
 import MScheduledImg from './contentView/mScheduledImg';
 import ApprovedScheduled from './contentView/approvedScheduled';
 
-export default function ContentViewModal({ view, data, type, onClose }) {
+export default function ContentViewModal({
+  view,
+  data,
+  type,
+  onClose,
+  redirectTo,
+}) {
   if (!data) return null;
 
   return (
@@ -30,7 +36,7 @@ export default function ContentViewModal({ view, data, type, onClose }) {
           {view === 'preApproved' && (
             <>
               {data.action === 'approve' && (
-                <Approve data={data} onClose={onClose} />
+                <Approve data={data} onClose={onClose} redirectTo={redirectTo} />
               )}
               {data.action === 'decline' && (
                 <Decline data={data} onClose={onClose} view={view} />

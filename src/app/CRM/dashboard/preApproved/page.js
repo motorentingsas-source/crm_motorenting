@@ -9,7 +9,6 @@ import ContentViewModal from '@/components/dashboard/preApproved/contentViewModa
 import LoadingOverlay from '@/components/ui/LoadingOverlay';
 import useApproved from '@/lib/api/hooks/useApproved';
 import useColumnFilters from '@/components/dashboard/tables/hooks/useColumnFilters';
-import { useDebounce } from '@/components/dashboard/tables/hooks/useDebounce';
 import { useDragScroll } from '@/hooks/useDragScroll';
 
 export default function PreApproved() {
@@ -24,10 +23,16 @@ export default function PreApproved() {
   const [selectedPreApproved, setSelectedPreApproved] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
 
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-
-  const { filters, handleFilterChange } = useColumnFilters({
+  const {
+    filters,
+    handleFilterChange,
+    debouncedFilters,
+    page,
+    setPage,
+    limit,
+    setLimit,
+    runLatest,
+  } = useColumnFilters({
     advisor: '',
     name: '',
     document: '',
@@ -37,18 +42,21 @@ export default function PreApproved() {
     saleState: '',
   });
 
-  const debouncedFilters = useDebounce(filters, 200);
-
   const fetchData = useCallback(async () => {
-    const res = await getPreApproveds({
-      page,
-      limit,
-      ...debouncedFilters,
-    });
+    const res = await runLatest(() =>
+      getPreApproveds({
+        page,
+        limit,
+        ...debouncedFilters,
+      })
+    );
+
+    // Llegó una respuesta más reciente: se descarta esta.
+    if (!res) return;
 
     setPreApproved(res.data || []);
     setMeta(res.meta || null);
-  }, [getPreApproveds, page, limit, debouncedFilters]);
+  }, [getPreApproveds, runLatest, page, limit, debouncedFilters]);
 
   useEffect(() => {
     fetchData();

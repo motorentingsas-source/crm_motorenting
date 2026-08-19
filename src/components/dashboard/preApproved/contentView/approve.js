@@ -14,7 +14,11 @@ import { addComment } from '@/lib/api/customers';
 import TradeIns from './approve/tradeIns';
 import OtherPurchases from './approve/otherPurchases';
 
-export default function Approve({ data, onClose }) {
+export default function Approve({
+  data,
+  onClose,
+  redirectTo = '/CRM/dashboard/approved',
+}) {
   const [holders, setHolders] = useState([]);
   const [payments, setPayments] = useState([]);
   const [receipts, setReceipts] = useState([]);
@@ -35,6 +39,9 @@ export default function Approve({ data, onClose }) {
   const [comment, setComment] = useState('');
 
   const { createApproved } = useApproved();
+
+  // El expediente ya existe: se está actualizando, no aprobando por primera vez.
+  const isUpdate = Boolean(data?.purchase || data?.holders?.length > 0);
 
   useEffect(() => {
     if (!data) return;
@@ -111,8 +118,10 @@ export default function Approve({ data, onClose }) {
 
       setAlert({
         type: 'success',
-        message: 'Cliente aprobado correctamente.',
-        url: `/CRM/dashboard/approved`,
+        message: isUpdate
+          ? 'Cliente actualizado correctamente.'
+          : 'Cliente aprobado correctamente.',
+        url: redirectTo,
       });
 
       setComment('');
@@ -340,9 +349,7 @@ export default function Approve({ data, onClose }) {
           className="inline-flex items-center gap-2 px-4 py-2 border border-transparent bg-blue-600 text-white font-medium rounded-lg hover:bg-white hover:text-orange-600 hover:border-orange-600 transition-colors duration-200 cursor-pointer"
         >
           <CheckCircleIcon className="w-5 h-5" />
-          {data && (data.purchase || data.holders?.length > 0)
-            ? 'Actualizar'
-            : 'Guardar y Aprobar'}
+          {isUpdate ? 'Actualizar' : 'Guardar y Aprobar'}
         </button>
       </div>
 

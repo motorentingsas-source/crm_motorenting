@@ -1,17 +1,39 @@
 import usePermissions from '@/hooks/usePermissions';
 import SearchFilter from './inputSearch/searchFilter';
 import { Roles } from '@/config/roles';
+import {
+  SALE_STATE_OPTIONS,
+  TERMINATION_STATUS_OPTIONS,
+  CREDIT_MANAGEMENT_OPTIONS,
+  CREDIT_MANAGEMENT_PENDING_OPTIONS,
+  MOTO_FOR_DELIVERY_OPTIONS,
+  ROLE_OPTIONS,
+  DISTRIBUTOR_OPTIONS,
+  FINANCIAL_ENTITY_OPTIONS,
+} from '@/lib/api/listData/filterOptions';
 
+const INPUT_CLASS =
+  'w-full px-2 py-1 border border-gray-300 rounded text-sm bg-white';
+
+/**
+ * Fila de filtros de la tabla.
+ *
+ * IMPORTANTE: el orden y el número de celdas de esta fila tiene que coincidir
+ * exactamente con el de `thead.js` para cada vista. Las entradas con
+ * `spacer: true` son columnas que no se pueden filtrar y solo mantienen la
+ * alineación.
+ */
 export default function InputFilters({
   rol,
   view,
   filters,
   handleFilterChange,
 }) {
-  const { canViewAll } = usePermissions();
+  const { canViewAll, canAssign } = usePermissions();
 
   const allFilters = [
     {
+      key: 'orderNumber',
       name: 'orderNumber',
       title: 'Numero de Orden',
       show:
@@ -22,6 +44,7 @@ export default function InputFilters({
         view === 'motorcyclesScheduled',
     },
     {
+      key: 'advisor',
       name: 'advisor',
       title: 'Asesor',
       show:
@@ -35,20 +58,36 @@ export default function InputFilters({
           view === 'customerWarehouse') &&
         rol !== Roles.ASESOR,
     },
-    { name: 'role', title: 'Rol', show: view === 'advisors' },
-    { name: 'name', title: 'Nombre', show: true },
     {
+      key: 'role',
+      name: 'role',
+      title: 'Rol',
+      show: view === 'advisors' && canViewAll,
+      type: 'select',
+      options: ROLE_OPTIONS,
+    },
+    { key: 'name', name: 'name', title: 'Nombre', show: true },
+    {
+      key: 'document',
       name: 'document',
       title: 'Documento',
       show: view !== 'motorcyclesScheduled',
     },
     {
+      key: 'deliveryDate',
       name: 'deliveryDate',
       title: 'Fecha de Entrega',
       show: view === 'delivered',
+      type: 'date',
     },
-    { name: 'plate', title: 'Placa', show: view === 'delivered' },
     {
+      key: 'plate-delivered',
+      name: 'plate',
+      title: 'Placa',
+      show: view === 'delivered',
+    },
+    {
+      key: 'email',
       name: 'email',
       title: 'Correo',
       show:
@@ -57,8 +96,9 @@ export default function InputFilters({
         view !== 'motorcyclesScheduled' &&
         view !== 'approved',
     },
-    { name: 'phone', title: 'Teléfono', show: true },
+    { key: 'phone', name: 'phone', title: 'Teléfono', show: true },
     {
+      key: 'city',
       name: 'city',
       title: 'Ciudad',
       show:
@@ -68,6 +108,7 @@ export default function InputFilters({
         view !== 'approved',
     },
     {
+      key: 'distributor',
       name: 'distributor',
       title: 'Distribuidor',
       show:
@@ -75,61 +116,95 @@ export default function InputFilters({
         view === 'motoForDelivery' ||
         view === 'motorcyclesScheduled' ||
         view === 'approved',
+      type: 'select',
+      options: DISTRIBUTOR_OPTIONS,
     },
     {
+      key: 'financialEntity',
       name: 'financialEntity',
       title: 'Financiera',
       show:
         view === 'creditManagement' ||
         view === 'motoForDelivery' ||
         view === 'approved',
+      type: 'select',
+      options: FINANCIAL_ENTITY_OPTIONS,
     },
     {
+      key: 'creditManagementStatus',
       name: 'creditManagementStatus',
       title: 'Estado de Gestión de Crédito',
       show: view === 'creditManagement',
+      type: 'select',
+      options: CREDIT_MANAGEMENT_PENDING_OPTIONS,
     },
     {
+      key: 'reference',
       name: 'reference',
       title: 'Referencia',
       show: view === 'motoForDelivery' || view === 'motorcyclesScheduled',
     },
     {
+      key: 'approvalDate',
       name: 'approvalDate',
       title: 'Fecha de Aprobación',
       show: view === 'approved',
+      type: 'date',
     },
     {
+      key: 'creditManagement',
       name: 'creditManagement',
       title: 'Gestión de crédito',
       show: view === 'approved',
+      type: 'select',
+      options: CREDIT_MANAGEMENT_OPTIONS,
     },
     {
+      key: 'motoForDelivery',
+      name: 'motoForDelivery',
+      title: 'Moto para Entrega',
+      show: view === 'approved',
+      type: 'select',
+      options: MOTO_FOR_DELIVERY_OPTIONS,
+    },
+    // Aprobados: "Fecha para Entregar" y "Estado de Entregar" salen del
+    // agendamiento y no se filtran; las celdas mantienen la alineación.
+    { key: 'approved-spacer-1', show: view === 'approved', spacer: true },
+    { key: 'approved-spacer-2', show: view === 'approved', spacer: true },
+    {
+      key: 'plate-scheduled',
       name: 'plate',
       title: 'Placa',
       show: view === 'motorcyclesScheduled',
     },
     {
+      key: 'scheduledDate',
       name: 'scheduledDate',
       title: 'Fecha Agendada',
       show: view === 'motorcyclesScheduled',
+      type: 'date',
     },
     {
+      key: 'scheduledTime',
       name: 'scheduledTime',
       title: 'Hora Entrega',
       show: view === 'motorcyclesScheduled',
+      type: 'time',
     },
     {
+      key: 'address',
       name: 'address',
       title: 'Direccion Entrega',
       show: view === 'motorcyclesScheduled',
     },
     {
+      key: 'state',
       name: 'state',
       title: 'Estado',
-      show: view === 'customers',
+      show: view === 'customers' || view === 'customerWarehouse',
     },
     {
+      key: 'saleState',
       name: 'saleState',
       title: 'Estado Venta',
       show:
@@ -137,37 +212,41 @@ export default function InputFilters({
         view === 'preApproved' ||
         view === 'customerWarehouse',
       type: 'select',
-      options: [
-        { label: 'Pendiente por aprobar', value: 'PENDIENTE_POR_APROBAR' },
-        { label: 'Aprobado', value: 'APROBADO' },
-        { label: 'Rechazado', value: 'RECHAZADO' },
-        { label: 'No aplica', value: 'NA' },
-      ],
+      options: SALE_STATE_OPTIONS,
     },
     {
+      key: 'terminationStatus',
       name: 'terminationStatus',
       title: 'Finalizado',
       show: view === 'delivered',
+      type: 'select',
+      options: TERMINATION_STATUS_OPTIONS,
     },
   ];
 
   return (
     <tr>
-      {canViewAll && view === 'customers' && <th></th>}
+      {canAssign && view === 'customers' && <th></th>}
 
       {allFilters
         .filter((f) => f.show)
-        .map(({ name, title }) => (
-          <th key={name} className="px-4 py-2">
-            <SearchFilter
-              name={name}
-              title={title}
-              value={filters[name] || ''}
-              className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-              handleFilterChange={handleFilterChange}
-            />
-          </th>
-        ))}
+        .map(({ key, name, title, spacer, type = 'text', options = [] }) =>
+          spacer ? (
+            <th key={key} className="px-4 py-2"></th>
+          ) : (
+            <th key={key} className="px-4 py-2">
+              <SearchFilter
+                name={name}
+                title={title}
+                type={type}
+                options={options}
+                value={filters[name] || ''}
+                className={INPUT_CLASS}
+                handleFilterChange={handleFilterChange}
+              />
+            </th>
+          )
+        )}
 
       <th></th>
     </tr>

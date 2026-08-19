@@ -6,7 +6,6 @@ import Table from '@/components/dashboard/tables/table';
 import Pagination from '@/components/dashboard/tables/segments/pagination';
 import LoadingOverlay from '@/components/ui/LoadingOverlay';
 import useColumnFilters from '@/components/dashboard/tables/hooks/useColumnFilters';
-import { useDebounce } from '@/components/dashboard/tables/hooks/useDebounce';
 import { useDragScroll } from '@/hooks/useDragScroll';
 import ContentViewModal from '@/components/dashboard/preApproved/contentViewModal';
 import useCreditManagement from '@/lib/api/hooks/useCreditManagement';
@@ -22,10 +21,16 @@ export default function CreditManagement() {
   const [meta, setMeta] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
 
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-
-  const { filters, handleFilterChange } = useColumnFilters({
+  const {
+    filters,
+    handleFilterChange,
+    debouncedFilters,
+    page,
+    setPage,
+    limit,
+    setLimit,
+    runLatest,
+  } = useColumnFilters({
     orderNumber: '',
     advisor: '',
     name: '',
@@ -33,20 +38,24 @@ export default function CreditManagement() {
     phone: '',
     distributor: '',
     financialEntity: '',
+    creditManagementStatus: '',
   });
 
-  const debouncedFilters = useDebounce(filters, 200);
-
   const fetchData = useCallback(async () => {
-    const res = await getAllCreditManagement({
-      page,
-      limit,
-      ...debouncedFilters,
-    });
+    const res = await runLatest(() =>
+      getAllCreditManagement({
+        page,
+        limit,
+        ...debouncedFilters,
+      })
+    );
+
+    // Llegó una respuesta más reciente: se descarta esta.
+    if (!res) return;
 
     setCreditManagement(res.data || []);
     setMeta(res.meta || null);
-  }, [getAllCreditManagement, page, limit, debouncedFilters]);
+  }, [getAllCreditManagement, runLatest, page, limit, debouncedFilters]);
 
   useEffect(() => {
     fetchData();
