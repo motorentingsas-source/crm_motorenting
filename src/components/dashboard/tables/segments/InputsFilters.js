@@ -2,6 +2,7 @@ import usePermissions from '@/hooks/usePermissions';
 import SearchFilter from './inputSearch/searchFilter';
 import { Roles } from '@/config/roles';
 import {
+  UNASSIGNED_ADVISOR,
   SALE_STATE_OPTIONS,
   TERMINATION_STATUS_OPTIONS,
   CREDIT_MANAGEMENT_OPTIONS,
@@ -27,9 +28,23 @@ export default function InputFilters({
   rol,
   view,
   filters,
+  advisors = [],
   handleFilterChange,
 }) {
   const { canViewAll, canAssign } = usePermissions();
+
+  // En Clientes el asesor se elige de una lista, para poder pedir
+  // explícitamente los que aún no tienen asesor asignado.
+  //
+  // Los roles que no pueden consultar el listado de usuarios (AUXILIAR,
+  // EJECUTIVO_FINANCIERO, COORDINADOR_DE_ENTREGA) se quedan con la caja de
+  // texto de siempre; ahí también funciona escribir "sin asignar".
+  const advisorIsSelect = view === 'customers' && advisors.length > 0;
+
+  const advisorOptions = [
+    { value: UNASSIGNED_ADVISOR, label: 'Sin asignar' },
+    ...advisors.map((a) => ({ value: a.name, label: a.name })),
+  ];
 
   const allFilters = [
     {
@@ -47,6 +62,9 @@ export default function InputFilters({
       key: 'advisor',
       name: 'advisor',
       title: 'Asesor',
+      ...(advisorIsSelect
+        ? { type: 'select', options: advisorOptions }
+        : {}),
       show:
         ((canViewAll && view === 'customers') ||
           view === 'delivered' ||
