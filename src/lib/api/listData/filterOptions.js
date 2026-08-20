@@ -2,6 +2,12 @@ import { DISTRIBUTORS_LIST } from './distributors';
 import { FINANCIALS_LIST } from './financials';
 import { formatEnumText } from '../utils/utils';
 
+/**
+ * Valor que pide los clientes que todavía no tienen asesor asignado.
+ * El backend reconoce esta frase (ver `isUnassignedAdvisor` en filters.util.ts).
+ */
+export const UNASSIGNED_ADVISOR = 'SIN_ASIGNAR';
+
 /** Convierte una lista de valores de enum en opciones legibles para un <select>. */
 export const toOptions = (values) =>
   values.map((value) => ({ value, label: formatEnumText(value) }));

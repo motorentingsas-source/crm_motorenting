@@ -43,7 +43,7 @@ const Table = ({
   const { deleteCustomer, loading: deleting } = useCustomers();
   const { downloadDeliveryOrder } = useApproved();
 
-  const { canAssign } = usePermissions();
+  const { canAssign, canViewAll } = usePermissions();
 
   const fetchAdvisors = useCallback(async () => {
     try {
@@ -54,9 +54,10 @@ const Table = ({
     }
   }, [getUsers]);
 
+  // La lista alimenta el modal de asignación y el desplegable del filtro de Asesor.
   useEffect(() => {
-    canAssign && fetchAdvisors();
-  }, [fetchAdvisors, canAssign]);
+    if (canAssign || canViewAll) fetchAdvisors();
+  }, [fetchAdvisors, canAssign, canViewAll]);
 
   const handleDeleteClick = (id, name, type) => {
     setDeleteTarget({ id, name, type });
@@ -205,6 +206,7 @@ const Table = ({
             rol={rol}
             view={view}
             filters={filters}
+            advisors={advisors}
             handleFilterChange={handleFilterChange}
           />
 
