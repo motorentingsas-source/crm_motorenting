@@ -31,6 +31,7 @@ export default function ContentData({
   handlePrintOrder,
   setHandleStateChange,
   setSelectedStateTermination,
+  setCommentTarget,
 }) {
   const { canAssign, canViewAll } = usePermissions();
 
@@ -266,6 +267,7 @@ export default function ContentData({
                 handlePrintOrder={handlePrintOrder}
                 setHandleStateChange={setHandleStateChange}
                 setSelectedStateTermination={setSelectedStateTermination}
+                setCommentTarget={setCommentTarget}
               />
 
               {showDeleteModal && (

@@ -6,6 +6,7 @@ import {
   ArrowPathIcon,
   PrinterIcon,
   ArchiveBoxIcon,
+  ChatBubbleLeftRightIcon,
 } from '@heroicons/react/24/outline';
 
 import Link from 'next/link';
@@ -22,6 +23,7 @@ export default function Actions({
   handlePrintOrder,
   setHandleStateChange,
   setSelectedStateTermination,
+  setCommentTarget,
 }) {
   const {
     canAssign,
@@ -37,6 +39,7 @@ export default function Actions({
     canMoveArchivedCustomers,
     canChangeStatusMotorcyclesScheduled,
     canChangeCustomerTermination,
+    canCommentApproved,
   } = usePermissions();
 
   const ActionButton = ({ onClick, disabled, color, icon: Icon, tooltip }) => (
@@ -98,6 +101,16 @@ export default function Actions({
             tooltip="Ver detalles"
           />
         )}
+
+      {view === 'approved' && canCommentApproved && (
+        <ActionButton
+          onClick={() => setCommentTarget(info)}
+          disabled={isLocked || isLockedSale}
+          color="text-orange-500 hover:text-orange-700"
+          icon={ChatBubbleLeftRightIcon}
+          tooltip="Agregar comentario"
+        />
+      )}
 
       {(view === 'approved' || view === 'delivered') && canPrinterApproved && (
         <ActionButton
