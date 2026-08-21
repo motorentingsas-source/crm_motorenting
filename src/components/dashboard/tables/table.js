@@ -7,6 +7,7 @@ import InputFilters from './segments/InputsFilters';
 import ModalAdvisor from './segments/modalAdvisor';
 import ChangeAdvisorModal from '../modals/changeAdvisorModal';
 import AlertModal from '../modals/alertModal';
+import AddCommentModal from '../modals/addCommentModal';
 import AssignAdvisor from './segments/assignAdvisor';
 import ContentData from './segments/contentData';
 
@@ -37,6 +38,7 @@ const Table = ({
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [alert, setAlert] = useState({ type: '', message: '', url: '' });
   const [advisors, setAdvisors] = useState([]);
+  const [commentTarget, setCommentTarget] = useState(null);
 
   const { getUsers, deleteUser } = useUsers();
   const { assignMultipleCustomers, assignAdvisor } = useCustomers();
@@ -231,6 +233,7 @@ const Table = ({
             loading={loading}
             setHandleStateChange={setHandleStateChange}
             setSelectedStateTermination={setSelectedStateTermination}
+            setCommentTarget={setCommentTarget}
           />
         </tbody>
       </table>
@@ -254,6 +257,23 @@ const Table = ({
           }
           currentAdvisor={showModalChangeAdvisor.advisor?.name || 'Sin asignar'}
           advisors={advisors}
+        />
+      )}
+
+      {commentTarget && (
+        <AddCommentModal
+          data={commentTarget}
+          onClose={async (saved) => {
+            setCommentTarget(null);
+
+            if (saved) {
+              setAlert({
+                type: 'success',
+                message: 'Comentario agregado correctamente.',
+              });
+              await fetchData();
+            }
+          }}
         />
       )}
 
